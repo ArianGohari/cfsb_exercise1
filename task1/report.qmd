@@ -1,0 +1,164 @@
+---
+title: "Task 1 – Pendel & Feed-Forward-Motiv"
+format:
+  html:
+    toc: true
+  ipynb: default
+jupyter: python3
+---
+
+# 1a – Pendel
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+
+g, l = 9.81, 1.0
+
+def rhs(t, y):
+    phi, omega = y
+    return [omega, -(g / l) * np.sin(phi)]
+
+def euler(phi0, omega0, dt, t_end):
+    n = int(t_end / dt)
+    t = np.linspace(0, n * dt, n + 1)
+    phi = np.empty(n + 1)
+    omega = np.empty(n + 1)
+    phi[0], omega[0] = phi0, omega0
+    for i in range(n):
+        dphi, domega = rhs(t[i], (phi[i], omega[i]))
+        phi[i + 1] = phi[i] + dt * dphi
+        omega[i + 1] = omega[i] + dt * domega
+    return t, phi, omega
+```
+
+```{python}
+phi0, omega0 = 1.0, 0.0
+dt, t_end = 0.01, 20.0
+
+t, phi_e, omega_e = euler(phi0, omega0, dt, t_end)
+
+sol = solve_ivp(rhs, (0, t_end), [phi0, omega0], t_eval=t, rtol=1e-8, atol=1e-10)
+phi_s, omega_s = sol.y
+```
+
+```{python}
+fig, ax = plt.subplots(1, 3, figsize=(13, 4))
+ax[0].plot(t, phi_e, label="Euler")
+ax[0].plot(t, phi_s, "--", label="RK45")
+ax[0].set_xlabel("t [s]"); ax[0].set_ylabel("phi [rad]"); ax[0].legend()
+ax[1].plot(t, omega_e, label="Euler")
+ax[1].plot(t, omega_s, "--", label="RK45")
+ax[1].set_xlabel("t [s]"); ax[1].set_ylabel("omega [rad/s]")
+ax[2].plot(phi_e, omega_e, label="Euler")
+ax[2].plot(phi_s, omega_s, "--", label="RK45")
+ax[2].set_xlabel("phi"); ax[2].set_ylabel("omega"); ax[2].set_title("Phasenraum")
+plt.tight_layout()
+plt.show()
+```
+
+## Diskussion
+
+Der Euler ist ein Verfahren erster Ordnung, sein Fehler skaliert linear
+mit $\Delta t$. Halbiert man $\Delta t$, wird der Fehler also ungefähr
+halb so groß. Der scipy-Solver hat adaptive Schrittweite und ist deutlich
+genauer; wir nehmen ihn hier als Referenz.
+
+Auffällig ist, dass die Amplitude beim Euler mit der Zeit wächst. Im
+Phasenraum laufen die Bahnen entsprechend spiralförmig nach außen, statt
+sich zu schließen. Das liegt daran, dass Euler die Energie nicht erhält
+und pro Schritt ein bisschen Energie ins System pumpt. Für ein
+konservatives System wie das Pendel ist das ein echtes Problem,
+symplektische Verfahren (z. B. der semi-implizite Euler) hätten es nicht.
+
+Für kleine Auslenkungen wäre die Periode $T \approx 2\pi\sqrt{l/g}
+\approx 2{,}006\,\text{s}$. Bei $\varphi_0 = 1\,\text{rad}$ ist die
+Nichtlinearität von $\sin\varphi$ schon spürbar und die Periode
+entsprechend etwas länger.
+
+# 1b – Feed-Forward-Motiv
+
+Das Motiv besteht aus drei Knoten `in`, `m`, `out` mit den Kanten
+`in → m`, `in → out` und `m → out`. `in` wirkt also auf zwei Wegen auf
+`out`: direkt und indirekt über `m`.
+
+Die zwei rechten Skizzen zeigen unterschiedliche Modellierungen desselben
+Netzes:
+
+- **Unabhängig (mittlere Skizze):** `in` und `m` haben jeweils eine eigene
+  Update-Funktion, die getrennt ausgewertet und danach kombiniert wird,
+  also $\text{out} = \alpha\,\text{in} + \beta\,m$. Die Beiträge sind
+  separierbar.
+- **Kombiniert (rechte Skizze):** eine einzige Funktion verarbeitet `in`
+  und `m` gemeinsam, also $\text{out} = \alpha\,\text{in}\cdot m$. Die
+  Wirkung ist nicht mehr in einzelne Anteile zerlegbar.
+
+`m` wird durch `in` mit einer Zeitverzögerung getrieben:
+$\dot{m} = \text{in}(t) - \delta\,m$.
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+
+# Parameter
+alpha, beta_coeff, delta = 1.0, 1.0, 0.3
+
+# Eingangssignal: kurzer Rechteckpuls als Beispiel,  andere Signale (Sprung,
+# Sinus) wären ebenso möglich; der Puls zeigt den Modellunterschied am klarsten,
+# weil er einen Zeitraum hat, in dem in=0 aber m noch erhöht ist (und umgekehrt).
+def in_signal(t):
+    return 1.0 if 5 < t < 15 else 0.0
+
+# ODE für m
+def dm_dt(t, y):
+    m = y[0]
+    return [in_signal(t) - delta * m]
+
+t_span = (0, 40)
+t_eval = np.linspace(*t_span, 1000)
+
+sol = solve_ivp(dm_dt, t_span, [0.0], t_eval=t_eval, max_step=0.1)
+t = sol.t
+m = sol.y[0]
+inp = np.array([in_signal(ti) for ti in t])
+
+out_additive   = alpha * inp + beta_coeff * m   # unabhängig: additiv
+out_combined   = alpha * inp * m                # kombiniert: Produkt
+
+fig, ax = plt.subplots(3, 1, figsize=(9, 7), sharex=True)
+ax[0].plot(t, inp, color="gray"); ax[0].set_ylabel("in(t)")
+ax[0].set_title("Eingangssignal (kurzer Puls)")
+ax[1].plot(t, out_additive, label="additiv: α·in + β·m")
+ax[1].set_ylabel("out"); ax[1].legend()
+ax[1].set_title("Unabhängig (mittlere Skizze)")
+ax[2].plot(t, out_combined, color="C1", label="kombiniert: α·in·m")
+ax[2].set_ylabel("out"); ax[2].legend(); ax[2].set_xlabel("t")
+ax[2].set_title("Kombiniert (rechte Skizze)")
+plt.tight_layout(); plt.show()
+```
+
+## Diskussion
+
+Der Unterschied ist nicht nur formal. Da `m` von `in` mit Verzögerung
+getrieben wird, zeigen die Modelle grundlegend verschiedene Dynamiken:
+
+**Additives Modell (unabhängig):** reagiert sofort wenn `in` hochgeht
+(über $\alpha\cdot\text{in}$) und klingt nach Ende des Pulses langsam ab,
+weil `m` noch erhöht ist. `m` wirkt als Gedächtnis-/Nachzieheffekt.
+
+**Kombiniertes Modell (Produkt):** beim Start des Pulses ist `m` noch 0,
+daher ist $\text{in}\cdot m = 0$. Erst wenn `m` aufgelaufen ist UND `in`
+noch aktiv ist, steigt `out`. Nach Ende des Pulses ist `in = 0`, also ist
+$\text{out} = 0$ unabhängig von `m`. Das kombinierte Modell ist ein
+**Persistenz-Detektor**: kurze Pulse werden ignoriert, nur anhaltende
+Signale passieren.
+
+Im booleschen Grenzfall entspricht das dem Unterschied OR (additiv) vs.
+AND (kombiniert): AND braucht beide Eingänge gleichzeitig aktiv.
+
+Fazit: Die Topologie allein legt das Verhalten nicht fest. Welche
+Modellvariante passt, hängt davon ab, wie der Knoten seine Eingänge
+biologisch integriert, zwei unabhängige Bindestellen (additiv) vs. ein
+Komplex, der beide Faktoren gleichzeitig braucht (kombiniert).

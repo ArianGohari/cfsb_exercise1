@@ -1,0 +1,30 @@
+[
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"NC_045512.2",
+    "title":"Severe acute respiratory syndrome coronavirus 2 isolate Wuhan-Hu-1, complete genome",
+    "length_bp":29903,
+    "update_date":"2020\/07\/18"
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"NC_004718.3",
+    "title":"SARS coronavirus Tor2, complete genome",
+    "length_bp":29751,
+    "update_date":"2020\/11\/20"
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"NC_038294.1",
+    "title":"Betacoronavirus England 1 isolate H123990006, complete genome",
+    "length_bp":30111,
+    "update_date":"2020\/11\/22"
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"NC_019843.3",
+    "title":"Middle East respiratory syndrome-related coronavirus isolate HCoV-EMC\/2012, complete genome",
+    "length_bp":30119,
+    "update_date":"2020\/08\/08"
+  }
+]

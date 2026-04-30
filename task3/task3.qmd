@@ -1,0 +1,285 @@
+---
+title: "Task 3 – Text Mining und Faktensammlung zu COVID-19"
+format: html
+---
+
+## Setup
+
+```{python}
+import re
+import time
+import json
+from pathlib import Path
+
+import requests
+import pandas as pd
+
+# kleine Höflichkeit gegenüber den APIs
+HEADERS = {"User-Agent": "cfsb-ex1-task3 (student project; mailto:student@campus.lmu.de)"}
+TIMEOUT = 20
+
+DB_PATH = Path("task3/papers_db.json")
+
+# Queries: nicht nur SARS-CoV-2 selbst, sondern auch Verwandtes (s. Aufgabe).
+QUERIES = {
+    "spike_ace2":  "SARS-CoV-2 AND (spike OR ACE2)",
+    "drugs":       "COVID-19 AND (remdesivir OR hydroxychloroquine OR ivermectin OR dexamethasone)",
+    "related":     "(MERS-CoV OR SARS-CoV-1) AND genome",
+    "lung":        "COVID-19 AND (pneumonia OR ARDS)",
+}
+```
+
+## 1. Suche auf mehreren Preprint-/Literatur-Servern
+
+Wir benutzen zwei APIs: **Europe PMC** und **Semantic Scholar**. Europe PMC indexiert
+sowohl peer-reviewte Literatur (PubMed/PMC) als auch Preprints (`SRC:PPR`), darunter
+bioRxiv, medRxiv und Research Square, wir taggen den konkreten Publisher beim Parsen.
+
+### Europe PMC
+
+```{python}
+def search_europepmc(query, max_results=50):
+    url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search"
+    params = {"query": query, "format": "json", "pageSize": min(max_results, 100),
+              "resultType": "core"}
+    r = requests.get(url, params=params, headers=HEADERS, timeout=TIMEOUT)
+    r.raise_for_status()
+    return r.json().get("resultList", {}).get("result", [])[:max_results]
+
+def strip_html(s):
+    if not isinstance(s, str):
+        return s
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", s)).strip()
+
+def parse_europepmc(results):
+    out = []
+    for r in results:
+        src = r.get("source", "") or ""
+        # bei Preprints steckt der konkrete Server im publisher-Feld
+        if src == "PPR":
+            pub = (r.get("bookOrReportDetails") or {}).get("publisher", "Preprint")
+            server = f"Preprint/{pub}"
+        else:
+            server = f"EuropePMC/{src}"
+        out.append({
+            "id": f"{src}:{r.get('id')}",
+            "server": server,
+            "title": r.get("title"),
+            "authors": r.get("authorString"),
+            "year": str(r.get("pubYear", "")),
+            "abstract": strip_html(r.get("abstractText")),
+            "doi": r.get("doi"),
+            "url": f"https://europepmc.org/article/{src}/{r.get('id')}" if src else None,
+        })
+    return out
+```
+
+### Semantic Scholar
+
+```{python}
+def search_semanticscholar(query, max_results=50, retries=3):
+    url = "https://api.semanticscholar.org/graph/v1/paper/search"
+    params = {"query": query, "limit": min(max_results, 100),
+              "fields": "title,authors,year,abstract,externalIds,url"}
+    for attempt in range(retries):
+        r = requests.get(url, params=params, headers=HEADERS, timeout=TIMEOUT)
+        if r.status_code == 429:
+            time.sleep(3 + 3 * attempt)  # rate limit -> backoff
+            continue
+        r.raise_for_status()
+        return r.json().get("data", [])
+    return []  # nach mehreren 429ern aufgeben statt zu crashen
+
+def parse_semanticscholar(results):
+    out = []
+    for r in results:
+        ext = r.get("externalIds") or {}
+        out.append({
+            "id": r.get("paperId"),
+            "server": "SemanticScholar",
+            "title": r.get("title"),
+            "authors": ", ".join(a.get("name", "") for a in r.get("authors", []) or []),
+            "year": str(r.get("year") or ""),
+            "abstract": r.get("abstract"),
+            "doi": ext.get("DOI"),
+            "url": r.get("url"),
+        })
+    return out
+```
+
+## 2. Sammeln und Mergen
+
+```{python}
+def normalize_doi(doi):
+    if not doi or not isinstance(doi, str):
+        return None
+    d = doi.strip().lower()
+    d = re.sub(r"^https?://(dx\.)?doi\.org/", "", d)
+    return d or None
+
+def collect(queries, per_query=30):
+    rows = []
+    for tag, q in queries.items():
+        # EuropePMC: einmal regulär, einmal explizit nur Preprints
+        for q_full in (q, f"({q}) AND SRC:PPR"):
+            try:
+                rows += [{**x, "query_tag": tag}
+                         for x in parse_europepmc(search_europepmc(q_full, per_query))]
+            except Exception as e:
+                print(f"EuropePMC failed for '{tag}': {e}")
+        try:
+            rows += [{**x, "query_tag": tag}
+                     for x in parse_semanticscholar(search_semanticscholar(q, per_query))]
+        except Exception as e:
+            print(f"S2 failed for '{tag}': {e}")
+        time.sleep(1)  # APIs nicht hämmern
+    return rows
+
+records = collect(QUERIES, per_query=30)
+df = pd.DataFrame(records)
+df["doi_norm"] = df["doi"].map(normalize_doi)
+
+# Dedup: erst Records mit DOI, dann den Rest per Titel.
+have_doi = df[df["doi_norm"].notna()].drop_duplicates(subset=["doi_norm"])
+no_doi   = df[df["doi_norm"].isna()].drop_duplicates(subset=["title"])
+df = pd.concat([have_doi, no_doi], ignore_index=True)
+
+print(f"Insgesamt {len(df)} eindeutige Einträge aus {df['server'].nunique()} Quellen")
+df["server"].value_counts()
+```
+
+```{python}
+df[["server", "year", "title"]].head(10)
+```
+
+## 3. Datenbank speichern / laden
+
+```{python}
+def save_db(df, path=DB_PATH):
+    df.to_json(path, orient="records", indent=2, force_ascii=False)
+
+def load_db(path=DB_PATH):
+    return pd.read_json(path, orient="records")
+
+save_db(df)
+print(f"-> {DB_PATH} ({DB_PATH.stat().st_size // 1024} KB)")
+```
+
+## 4. Suche in der Datenbank
+
+```{python}
+def search_db(df, *keywords):
+    """ANDe alle Keywords gegen Titel+Abstract."""
+    text = (df["title"].fillna("") + " " + df["abstract"].fillna("")).str.lower()
+    mask = pd.Series(True, index=df.index)
+    for kw in keywords:
+        mask &= text.str.contains(re.escape(kw.lower()))
+    cols = ["server", "year", "title", "url"]
+    return df.loc[mask, cols].reset_index(drop=True)
+
+search_db(df, "ACE2", "spike").head(10)
+```
+
+## 5. Faktenextraktion mit Quellenverlinkung
+
+Sentence-Splitting per Regex, `str.split(".")` zerschießt Abkürzungen wie *Fig. 2*
+oder *e.g.* zu sehr.
+
+```{python}
+SENT_SPLIT = re.compile(r"(?<=[.!?])\s+(?=[A-Z(\"])")
+
+def split_sentences(text):
+    if not isinstance(text, str):
+        return []
+    # die häufigsten Abkürzungen schützen
+    text = re.sub(r"\b(Fig|et al|e\.g|i\.e|vs|cf|approx|ca|No)\.", r"\1<DOT>", text)
+    parts = SENT_SPLIT.split(text)
+    return [p.replace("<DOT>", ".").strip() for p in parts if p.strip()]
+
+def extract_facts(df, *keywords, limit=None):
+    rows = []
+    kws = [k.lower() for k in keywords]
+    for _, row in df.iterrows():
+        for sent in split_sentences(row.get("abstract")):
+            s = sent.lower()
+            if all(k in s for k in kws):
+                rows.append({
+                    "fact": sent,
+                    "title": row["title"],
+                    "year": row["year"],
+                    "source": row["url"],
+                })
+                if limit and len(rows) >= limit:
+                    return pd.DataFrame(rows)
+    return pd.DataFrame(rows)
+
+extract_facts(df, "neutralizing antibody", limit=10)
+```
+
+## 6. Faktencheck zu öffentlichen Behauptungen
+
+Im Frühjahr 2020 zirkulierten viele Aussagen zuerst über Pressemitteilungen, Interviews
+oder Social Media. Wir prüfen drei prominente Beispiele gegen unsere Datenbank.
+
+```{python}
+CLAIMS = {
+    "Hydroxychloroquin heilt COVID-19":
+        ["hydroxychloroquine"],
+    "Ibuprofen verschlimmert COVID-19":
+        ["ibuprofen"],
+    "Vitamin D schützt vor schwerem Verlauf":
+        ["vitamin d"],
+    "Ivermectin als wirksame Therapie":
+        ["ivermectin"],
+}
+
+def check_claim(df, keywords):
+    hits = search_db(df, *keywords)
+    facts = extract_facts(df, *keywords, limit=3)
+    return len(hits), facts
+
+summary = []
+evidence = {}
+for claim, kws in CLAIMS.items():
+    n, facts = check_claim(df, kws)
+    summary.append({"claim": claim, "keywords": ", ".join(kws), "n_papers": n})
+    evidence[claim] = facts
+
+pd.DataFrame(summary)
+```
+
+Beispielsätze (mit Quelle) je Behauptung:
+
+```{python}
+for claim, facts in evidence.items():
+    print(f"\n### {claim}")
+    if facts.empty:
+        print("  (keine passenden Sätze in den Abstracts)")
+        continue
+    for _, f in facts.iterrows():
+        src = f["source"] or "?"
+        print(f"  - {f['fact'][:240]}  [{src}]")
+```
+
+## 7. Diskussion
+
+Pressemitteilungen und Interviews sind während der Pandemie eine wichtige, aber problematische
+Quelle: Aussagen wie „Hydroxychloroquin heilt COVID" oder „Ibuprofen verschlimmert den Verlauf"
+verbreiteten sich schneller als die zugehörigen Studien begutachtet werden konnten. Mit der
+obigen Mini-Datenbank lässt sich zumindest grob prüfen, ob
+
+- überhaupt Preprints/Paper zum Thema existieren,
+- ob in den Abstracts unterstützende oder widersprechende Formulierungen vorkommen,
+- aus welchen Quellen die Treffer stammen (peer-reviewed vs. Preprint).
+
+Grenzen der Methode:
+
+- Die Suche ist string-basiert, semantische Verneinung („no significant effect") wird nicht erkannt.
+- Abstracts allein reichen für eine echte Bewertung nicht, Volltext, Studiendesign und
+  Stichprobengröße fehlen hier komplett.
+- Preprints sind nicht peer-reviewed; mehrere unabhängige Treffer mit konsistenter Aussage
+  erhöhen aber die Plausibilität.
+
+Ein realistischer Workflow wäre: (1) Behauptung aufschnappen, (2) Datenbank nach Stichworten
+durchsuchen, (3) Abstracts überfliegen, (4) bei vielversprechenden Treffern Volltext lesen,
+(5) Studiendesign bewerten. Schritte 1–3 deckt dieses Notebook ab.

@@ -1,0 +1,32 @@
+---
+title: "Assignments 2026-1 – Modeling the COVID-19 Pandemics"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+  ipynb: default
+jupyter: python3
+---
+
+{{< include task1/report.qmd >}}
+
+{{< include task2/task2.md >}}
+
+{{< include task3/task3.qmd >}}
+
+{{< include task4/task4.qmd >}}
+
+{{< include task5/task5.qmd >}}
+
+{{< include task6/task6.qmd >}}
+
+{{< include task7/task7.md >}}
+
+{{< include task8/task8.md >}}
+
+{{< include task9/task9.md >}}
+
+{{< include task10/task10.qmd >}}
+
+{{< include task11/task11.qmd >}}

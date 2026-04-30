@@ -1,0 +1,2102 @@
+[
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTC1",
+    "protein":"Replicase polyprotein 1a",
+    "genes":"",
+    "length":4405
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTD1",
+    "protein":"Replicase polyprotein 1ab",
+    "genes":"rep",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTC2",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTC7",
+    "protein":"ORF7a protein",
+    "genes":"",
+    "length":121
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTC4",
+    "protein":"Envelope small membrane protein",
+    "genes":"E",
+    "length":75
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTC8",
+    "protein":"ORF8 protein",
+    "genes":"",
+    "length":121
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTD2",
+    "protein":"ORF9b protein",
+    "genes":"",
+    "length":97
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTC3",
+    "protein":"ORF3a protein",
+    "genes":"",
+    "length":275
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTC5",
+    "protein":"Membrane protein",
+    "genes":"",
+    "length":222
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTC6",
+    "protein":"ORF6 protein",
+    "genes":"",
+    "length":61
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTC9",
+    "protein":"Nucleoprotein",
+    "genes":"N",
+    "length":419
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTD8",
+    "protein":"ORF7b protein",
+    "genes":"",
+    "length":43
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTD3",
+    "protein":"Putative ORF9c protein",
+    "genes":"",
+    "length":73
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTF1",
+    "protein":"Putative ORF3b protein",
+    "genes":"",
+    "length":22
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A663DJA2",
+    "protein":"Putative ORF10 protein",
+    "genes":"ORF10",
+    "length":38
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTG1",
+    "protein":"ORF3c protein",
+    "genes":"",
+    "length":41
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"P0DTG0",
+    "protein":"Putative ORF3d protein",
+    "genes":"",
+    "length":57
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A679G4D8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A679G9E9",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6B9UY63",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6B9V049",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6B9VNL0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6B9VSU5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6B9VSV5",
+    "protein":"Replicase polyprotein 1ab",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6B9WIH5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6B9WIK4",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6B9WIM9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6B9XJC0",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0N6C5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0N6E9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0QEL8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0QEM7",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7095
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0QEN3",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0QGH5",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0R287",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0R294",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7088
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0RQ44",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0RS15",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0T6V0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0X2H7",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C0X332",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C1BAC9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6C1F1G5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6F8Z6N2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G5ZVU5",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1272
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G5ZX94",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G6CWZ5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G6CX04",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G6CX13",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7CR93",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7K2D8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7K2G6",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7K2L4",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7K2M4",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7K2V2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7KRB4",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7KRH9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7S658",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7S6B2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7S6C1",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7S6D8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7SLV1",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7SLW0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7SLW8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7097
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7WE45",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7WEE2",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G7WEE7",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G9HF12",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G9ZWU8",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G9ZX45",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6G9ZXR5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7093
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0C678",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0C6G8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0EY34",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0JI07",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0JLS9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0JNA7",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0JPE1",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0JQ80",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0YZY1",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H0Z1W8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H1PJZ3",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H1PK90",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H1PPV0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H1PRW5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H1TFE5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H1W0K3",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H1W2H2",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H1XPM2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H1XPS1",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2EH11",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2EHG9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2L6K3",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2L6Y7",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1273
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2L6Z5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2L7Z4",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2L8H9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2L8N0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2L9E3",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-2",
+    "accession":"A0A6H2L9H0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7096
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P59594",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P59595",
+    "protein":"Nucleoprotein",
+    "genes":"N",
+    "length":422
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P0C6X7",
+    "protein":"Replicase polyprotein 1ab",
+    "genes":"rep",
+    "length":7073
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P59632",
+    "protein":"ORF3a protein",
+    "genes":"",
+    "length":274
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P59635",
+    "protein":"ORF7a protein",
+    "genes":"",
+    "length":122
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P59596",
+    "protein":"Membrane protein",
+    "genes":"M",
+    "length":221
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P59637",
+    "protein":"Envelope small membrane protein",
+    "genes":"E",
+    "length":76
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P0C6U8",
+    "protein":"Replicase polyprotein 1a",
+    "genes":"",
+    "length":4382
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P59634",
+    "protein":"ORF6 protein",
+    "genes":"",
+    "length":63
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P59636",
+    "protein":"ORF9b protein",
+    "genes":"",
+    "length":98
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"P59633",
+    "protein":"ORF3b protein",
+    "genes":"",
+    "length":154
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q80H93",
+    "protein":"ORF8b protein",
+    "genes":"",
+    "length":84
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q7TFA1",
+    "protein":"Protein non-structural 7b",
+    "genes":"",
+    "length":44
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q7TLC7",
+    "protein":"Uncharacterized protein 14",
+    "genes":"",
+    "length":70
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q7TFA0",
+    "protein":"ORF8a protein",
+    "genes":"",
+    "length":39
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S788",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1236
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3Q8AKM0",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1257
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3S6GS72",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7050
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WCE7",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1235
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WD52",
+    "protein":"ORF1ab polyprotein",
+    "genes":"ORF1ab",
+    "length":7082
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A7J8L2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"PP1ab",
+    "length":7073
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A7J8L3",
+    "protein":null,
+    "genes":"PP1a",
+    "length":4382
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A7J8L4",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"C8YZ74",
+    "protein":null,
+    "genes":"",
+    "length":4382
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9SE37",
+    "protein":null,
+    "genes":"PP1a",
+    "length":4382
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9SFL2",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9T4N3",
+    "protein":"ORF1ab polyprotein",
+    "genes":"PP1ab",
+    "length":7073
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9TBE8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"PP1ab",
+    "length":7073
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9TDZ0",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9TE70",
+    "protein":null,
+    "genes":"PP1a",
+    "length":4382
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q19QX0",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q19QX1",
+    "protein":null,
+    "genes":"",
+    "length":4382
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q19QX2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7073
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202E5",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202E6",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202E9",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202F2",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202F4",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202F5",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202F9",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202G3",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202G5",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202G8",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202H5",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q202H8",
+    "protein":"Spike glycoprotein",
+    "genes":"S",
+    "length":1255
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S776",
+    "protein":null,
+    "genes":"",
+    "length":4382
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WCE5",
+    "protein":null,
+    "genes":"ORF1ab",
+    "length":4391
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S781",
+    "protein":"Nucleoprotein",
+    "genes":"N",
+    "length":422
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S797",
+    "protein":"Membrane protein",
+    "genes":"M",
+    "length":221
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3S6GSH8",
+    "protein":"Membrane protein",
+    "genes":"M",
+    "length":221
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3S6GSS4",
+    "protein":"Nucleoprotein",
+    "genes":"N",
+    "length":419
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WD98",
+    "protein":"Membrane protein",
+    "genes":"M",
+    "length":222
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R7AIP5",
+    "protein":"Nucleoprotein",
+    "genes":"N",
+    "length":415
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A7J8L8",
+    "protein":"Membrane protein",
+    "genes":"M",
+    "length":221
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9TBX8",
+    "protein":"Membrane protein",
+    "genes":"M",
+    "length":221
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9TEG5",
+    "protein":"Membrane protein",
+    "genes":"M",
+    "length":221
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q19QW6",
+    "protein":"Membrane protein",
+    "genes":"M",
+    "length":221
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q6S8E1",
+    "protein":"Nucleoprotein",
+    "genes":"N",
+    "length":422
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S769",
+    "protein":"Replicase polyprotein 1ab",
+    "genes":"",
+    "length":145
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S771",
+    "protein":"Replicase polyprotein 1ab",
+    "genes":"",
+    "length":145
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S774",
+    "protein":"Replicase polyprotein 1ab",
+    "genes":"",
+    "length":145
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S784",
+    "protein":"Replicase polyprotein 1ab",
+    "genes":"",
+    "length":147
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S796",
+    "protein":"Accessory protein 7a",
+    "genes":"",
+    "length":122
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A220F203",
+    "protein":"Replicase polyprotein 1ab",
+    "genes":"",
+    "length":289
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3Q8AHU5",
+    "protein":"Envelope small membrane protein",
+    "genes":"E",
+    "length":76
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3Q8ARD5",
+    "protein":null,
+    "genes":"ORF3a",
+    "length":268
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3Q8B233",
+    "protein":"ORF6 protein",
+    "genes":"ORF6",
+    "length":63
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3S6GUI8",
+    "protein":"Accessory protein 7a",
+    "genes":"ORF7a",
+    "length":119
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WD54",
+    "protein":null,
+    "genes":"ORF3a",
+    "length":276
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WDS7",
+    "protein":"Accessory protein 7a",
+    "genes":"ORF7a",
+    "length":122
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WEA1",
+    "protein":"Envelope small membrane protein",
+    "genes":"E",
+    "length":75
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WEK9",
+    "protein":"ORF6 protein",
+    "genes":"ORF6",
+    "length":61
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A7J8M0",
+    "protein":"Accessory protein 7a",
+    "genes":"sars7a",
+    "length":122
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9SEF0",
+    "protein":null,
+    "genes":"ORF3a",
+    "length":274
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9SF21",
+    "protein":"Accessory protein 7a",
+    "genes":"ORF7a",
+    "length":122
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9T5H6",
+    "protein":"Accessory protein 7a",
+    "genes":"ORF7a",
+    "length":122
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9TC74",
+    "protein":null,
+    "genes":"ORF3a",
+    "length":274
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9TE86",
+    "protein":"Envelope small membrane protein",
+    "genes":"E",
+    "length":76
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9TEM7",
+    "protein":null,
+    "genes":"ORF3a",
+    "length":274
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"J9TEN5",
+    "protein":"Accessory protein 7a",
+    "genes":"ORF7a",
+    "length":122
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q19QW4",
+    "protein":"Accessory protein 7a",
+    "genes":"ORF7a",
+    "length":122
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q19QW5",
+    "protein":"ORF6 protein",
+    "genes":"ORF6",
+    "length":63
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"Q19QW7",
+    "protein":"Envelope small membrane protein",
+    "genes":"E",
+    "length":76
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S780",
+    "protein":"Accessory protein 7b",
+    "genes":"",
+    "length":44
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S782",
+    "protein":null,
+    "genes":"",
+    "length":122
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S783",
+    "protein":"Accessory protein 9b",
+    "genes":"",
+    "length":98
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S789",
+    "protein":"ORF6 protein",
+    "genes":"",
+    "length":63
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S794",
+    "protein":null,
+    "genes":"",
+    "length":70
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A1W6S798",
+    "protein":null,
+    "genes":"",
+    "length":274
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A220F1P8",
+    "protein":"Replicase polyprotein 1ab",
+    "genes":"",
+    "length":136
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3Q8AD31",
+    "protein":"Accessory protein 9b",
+    "genes":"ORF9b",
+    "length":96
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A3Q8AV63",
+    "protein":"Accessory protein 7b",
+    "genes":"ORF7b",
+    "length":40
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WCG4",
+    "protein":null,
+    "genes":"ORF10",
+    "length":38
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R6WCH9",
+    "protein":"Accessory protein 7b",
+    "genes":"ORF7b",
+    "length":43
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"A0A7R7AJ64",
+    "protein":null,
+    "genes":"ORF8",
+    "length":125
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"G8H300",
+    "protein":null,
+    "genes":"",
+    "length":237
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"G8H301",
+    "protein":null,
+    "genes":"",
+    "length":306
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"G8H302",
+    "protein":null,
+    "genes":"",
+    "length":139
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"G8H303",
+    "protein":null,
+    "genes":"",
+    "length":143
+  },
+  {
+    "virus":"SARS-CoV-1",
+    "accession":"G8H304",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":385
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023J521",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023J538",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023NFC8",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023NH73",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023SG72",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023SGG5",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W031",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W041",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W050",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W057",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W068",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W0X0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W0Y2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W0Z2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W101",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A023W112",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A024E139",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A024E2G0",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A024E2M0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A024E3Y4",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A068EM69",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A068EM81",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A0QGF6",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":2623
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A0QGJ0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":2623
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A0QIB7",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A0QIE7",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A0QJJ2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":2623
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A0QJW8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E674",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E693",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E6B8",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E6D5",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E6F0",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E6G6",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E7I0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E7K2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E7L3",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E7M2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E7N8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7E7Q2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7KRH9",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0A7KRJ8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5KTH3",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5KTK5",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5KY54",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5L4H7",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5L4I9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5L6F0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5L6J0",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5L6J7",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5LAD1",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5LAE2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5LAI8",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0B5LAJ9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0D3MTT0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":2623
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0D3MTT2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":2676
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0D3MU45",
+    "protein":null,
+    "genes":"",
+    "length":4301
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0D3MU79",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0D3MU83",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G2UF92",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G2UGR0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3F5U1",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3FA88",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3KCC9",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3KCD5",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3KCE1",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4390
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3KF81",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3KF87",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3KFA0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7077
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3U3Z6",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3U5R1",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3VKB9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G3VM75",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G4AL09",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0G4AM11",
+    "protein":null,
+    "genes":"orf1ab",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0R7E160",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0R7E399",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0R7E401",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0R9UMG9",
+    "protein":"ORF1ab polyprotein",
+    "genes":"",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0R9UQ36",
+    "protein":null,
+    "genes":"",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0S3IUH4",
+    "protein":null,
+    "genes":"orf1a",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0S3IUQ0",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GKS3",
+    "protein":null,
+    "genes":"orf1a",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GKS7",
+    "protein":null,
+    "genes":"orf1a",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GKX2",
+    "protein":null,
+    "genes":"orf1a",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GL21",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GL35",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GL59",
+    "protein":null,
+    "genes":"orf1a",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLD0",
+    "protein":null,
+    "genes":"orf1a",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLG2",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLG3",
+    "protein":null,
+    "genes":"orf1a",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLH4",
+    "protein":null,
+    "genes":"orf1a",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLI5",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLK8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLN3",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLP6",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLU3",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLU7",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLU8",
+    "protein":null,
+    "genes":"orf1a",
+    "length":4391
+  },
+  {
+    "virus":"MERS-CoV",
+    "accession":"A0A0U2GLV8",
+    "protein":"ORF1ab polyprotein",
+    "genes":"orf1ab",
+    "length":7078
+  }
+]

@@ -1,0 +1,15 @@
+build/
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+*.ipynb
+.ruff_cache/
+.pi/
+.pi-lens/
+
+/.quarto/
+**/*.quarto_ipynb
+
+# Quarto render output
+*.html
+*_files/

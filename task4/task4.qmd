@@ -1,0 +1,205 @@
+---
+title: "Task 4 – Genomische und proteomische Informationen über SARS-CoV-2 und verwandte Coronaviren"
+format: html
+---
+
+## Setup
+
+```{python}
+import time
+import requests
+import pandas as pd
+
+VIRUSES = {
+    "SARS-CoV-2": 2697049,
+    "SARS-CoV-1": 694009,
+    "MERS-CoV":   1335626,
+}
+
+GENOME_QUERIES = {
+    "SARS-CoV-2": "SARS-CoV-2[Organism] AND complete genome[Title] AND RefSeq[Filter]",
+    "SARS-CoV-1": "SARS coronavirus[Organism] AND complete genome[Title] AND RefSeq[Filter]",
+    "MERS-CoV":   "Middle East respiratory syndrome coronavirus[Organism] AND complete genome[Title] AND RefSeq[Filter]",
+}
+```
+
+## 1. Proteomik via UniProt
+
+```{python}
+def fetch_uniprot_proteins(taxon_id: int, max_results: int = 100) -> list[dict]:
+    url = "https://rest.uniprot.org/uniprotkb/search"
+    params = {
+        "query": f"organism_id:{taxon_id}",
+        "format": "json",
+        "size": max_results,
+        "fields": "accession,protein_name,gene_names,length,sequence",
+    }
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json().get("results", [])
+
+def parse_uniprot(results: list[dict], virus_name: str) -> list[dict]:
+    records = []
+    for r in results:
+        records.append({
+            "virus": virus_name,
+            "accession": r.get("primaryAccession"),
+            "protein": r.get("proteinDescription", {})
+                        .get("recommendedName", {})
+                        .get("fullName", {})
+                        .get("value"),
+            "genes": ", ".join(
+                g.get("geneName", {}).get("value", "")
+                for g in r.get("genes", [])
+            ),
+            "length": r.get("sequence", {}).get("length"),
+        })
+    return records
+
+def fetch_all_proteins(viruses: dict) -> pd.DataFrame:
+    records = []
+    for name, taxid in viruses.items():
+        results = fetch_uniprot_proteins(taxid)
+        records += parse_uniprot(results, name)
+    return pd.DataFrame(records)
+
+proteins_df = fetch_all_proteins(VIRUSES)
+proteins_df.to_json("task4/proteins_db.json", orient="records", indent=2)
+proteins_df.groupby("virus")["accession"].count().reset_index(name="n_proteine")
+```
+
+```{python}
+proteins_df.head(10)
+```
+
+## 2. Genomik via NCBI GenBank
+
+```{python}
+def fetch_genome_accessions(query: str) -> list[str]:
+    url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+    params = {"db": "nucleotide", "term": query, "retmode": "json", "retmax": 5}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()["esearchresult"]["idlist"]
+
+def fetch_genome_summary(ncbi_ids: list[str]) -> list[dict]:
+    if not ncbi_ids:
+        return []
+    time.sleep(0.4)
+    url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
+    params = {"db": "nucleotide", "id": ",".join(ncbi_ids), "retmode": "json"}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    result = response.json().get("result", {})
+    return [result[uid] for uid in result.get("uids", [])]
+
+def fetch_all_genomes(genome_queries: dict) -> pd.DataFrame:
+    records = []
+    for name, query in genome_queries.items():
+        ids = fetch_genome_accessions(query)
+        time.sleep(0.4)
+        for s in fetch_genome_summary(ids):
+            records.append({
+                "virus": name,
+                "accession": s.get("accessionversion"),
+                "title": s.get("title"),
+                "length_bp": s.get("slen"),
+                "update_date": s.get("updatedate"),
+            })
+    return pd.DataFrame(records)
+
+genomes_df = fetch_all_genomes(GENOME_QUERIES)
+genomes_df.to_json("task4/genomes_db.json", orient="records", indent=2)
+genomes_df[["virus", "accession", "title", "length_bp"]]
+```
+
+## 3. Genomlängenvergleich
+
+```{python}
+import matplotlib.pyplot as plt
+
+summary = genomes_df.groupby("virus")["length_bp"].max().reset_index()
+
+fig, ax = plt.subplots()
+ax.bar(summary["virus"], summary["length_bp"])
+ax.set_ylabel("Genomlänge (bp)")
+ax.set_title("Genomgrößenvergleich der Coronaviren")
+plt.tight_layout()
+plt.show()
+```
+
+## 4. Diskussion
+
+Alle drei Coronaviren besitzen einzelsträngige, positiv-orientierte RNA-Genome ähnlicher
+Länge (~29–30 kb). Wesentliche Unterschiede:
+
+- **SARS-CoV-2** (29.903 bp): kodiert ein Spike-Protein mit einer Furin-Spaltstelle,
+  die bei SARS-CoV-1 fehlt, was die ACE2-Bindungseffizienz und den Zelltropismus.
+- **SARS-CoV-1** (29.751 bp): nächster Verwandter von SARS-CoV-2 (~79 % Sequenzidentität);
+  nutzt ebenfalls ACE2 als Rezeptor.
+- **MERS-CoV** (~30.119 bp): nutzt DPP4 (CD26) statt ACE2, was die geringere
+  Mensch-zu-Mensch-Übertragbarkeit.
+
+Evolutionäre und proteomische Vergleiche dieser Viren können Drug-Repurposing-Ansätze
+leiten, indem konservierte Proteine als Wirkstoffziele identifiziert werden.
+
+## 5. Lebenszyklus von SARS-CoV-2 und Wirt-Interaktion
+
+Der Replikationszyklus von SARS-CoV-2 verläuft in sechs Hauptschritten:
+
+**1. Anheftung und Eintritt**
+Das Spike-Protein (S) bindet den Wirtsrezeptor **ACE2** (Angiotensin-Converting Enzyme 2),
+der auf Typ-II-Pneumozyten, Darmepithelzellen und Gefäßendothel exprimiert wird.
+Die Wirts-Serinprotease **TMPRSS2** aktiviert Spike durch Spaltung der S1/S2-Grenze
+und ermöglicht so die Membranfusion. Alternativ kann der Virus über Endosomen eintreten,
+wo Cathepsine B/L diese Spaltung übernehmen. Die Furin-Spaltstelle aktiviert Spike
+bereits in der Produzentenzelle vor.
+
+**2. Genomfreisetzung**
+Nach der Fusion wird das ~30 kb große (+)ssRNA-Genom direkt ins Zytoplasma entlassen
+und ist sofort durch Wirts-Ribosomen translatierbar.
+
+**3. Translation der Replikase**
+ORF1a und ORF1b werden zu Polyproteinen pp1a und pp1ab translatiert (über −1 ribosomales
+Frameshift). Diese werden von zwei viralen Proteasen gespalten:
+- **Mpro (3CLpro, nsp5)**: spaltet an 11 Stellen → nsp4–nsp16
+- **PLpro (nsp3)**: spaltet nsp1–nsp3, wirkt zusätzlich als Deubiquitinase gegen die angeborene Immunantwort
+
+**4. Replikation und Transkription**
+Der RNA-abhängige RNA-Polymerase-Komplex (**RdRp, nsp12** + Kofaktoren nsp7/nsp8)
+kopiert das Genom und produziert subgenomische RNAs (sgRNAs) für Strukturproteine
+(S, E, M, N) und akzessorische ORFs. Die ExoN-Korrekturlesefunktion (nsp14) hält
+die Mutationsrate ~10× niedriger als bei den meisten RNA-Viren.
+
+**5. Zusammenbau und Knospung**
+Strukturproteine werden in ER-Membranen eingebaut; Nukleokapsid (N + Genom) knospt
+in den ER-Golgi-Intermediärkomplex (ERGIC). Virionen reisen über den sekretorischen
+Weg und werden durch Exozytose freigesetzt. M-Protein treibt die Knospung,
+E-Protein erleichtert die Membrankrümmung.
+
+**6. Immunevasion**
+SARS-CoV-2 unterdrückt aktiv die angeborene Immunantwort:
+- **Nsp1** blockiert die Wirts-mRNA-Translation durch Einlagerung in den ribosomalen Eingangskanal
+- **Nsp13** hemmt TBK1, eine zentrale Kinase des IFN-I-Signalwegs
+- **Orf6** blockiert den Kernimport von STAT1 durch Bindung an NUP98/RAE1
+- **Orf8** reduziert die MHC-I-Oberflächenexpression und verringert die Erkennung durch zytotoxische T-Zellen
+
+## 6. Evolutionärer Kontext
+
+SARS-CoV-2 gehört zum Subgenus *Sarbecovirus* der *Betacoronaviren*. Der nächste
+bekannte Verwandte ist **RaTG13** (Fledermaus-Coronavirus, ~96 % Genomidentität),
+was auf einen Fledermaus-Ursprung hindeutet. Die Furin-Spaltstelle, die bei RaTG13
+und SARS-CoV-1 fehlt, könnte durch Rekombination mit einem Pangolin-Coronavirus oder
+durch Selektion in einem Zwischenwirt entstanden sein (Andersen et al., Nat Med 2020).
+
+Innerhalb von SARS-CoV-2 erzeugt die niedrige Mutationsrate (~2 Substitutionen/Genom/Monat)
+dennoch ausreichende Diversität für phylogenetisches Tracking (siehe Task 8). Die D614G-
+Substitution im Spike wurde Mitte 2020 global dominant. Spätere Varianten (Alpha, Delta,
+Omicron) akkumulierten weitere RBD-Mutationen für Immunevasion und erhöhte ACE2-Affinität,
+ein klares Beispiel für laufende adaptive Evolution unter Immunselektionsdruck.
+
+**Quellen:**
+- Hoffmann M. et al., *SARS-CoV-2 Cell Entry Depends on ACE2 and TMPRSS2*, Cell 181 (2020).
+- V'kovski P. et al., *Coronavirus biology and replication*, Nat Rev Microbiol 19 (2021).
+- Andersen K.G. et al., *The proximal origin of SARS-CoV-2*, Nat Med 26 (2020).
+- Gordon D.E. et al., *A SARS-CoV-2 protein interaction map*, Nature 583 (2020).

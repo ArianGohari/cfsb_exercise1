@@ -1,0 +1,413 @@
+---
+title: "Task 5 – SIR / SEIR / SECIR Modelle der COVID-19-Pandemie"
+format:
+  html:
+    toc: true
+  ipynb: default
+jupyter: python3
+---
+
+# Einführung
+
+Kompartimentmodelle teilen die Bevölkerung in disjunkte Gruppen, zwischen denen
+mit gewissen Raten Übergänge stattfinden. Sie sind das Standardwerkzeug der
+mathematischen Epidemiologie und stehen hinter Slogans wie *"flatten the curve"*.
+
+Wir betrachten der Reihe nach SIR → SEIR → SECIR und bauen daraus ein
+Neher-/Helmholtz-ähnliches Modell mit Krankenhaus-, ICU- und Todes-Kompartimenten
+und zeitabhängiger Kontaktrate (Lockdown-Szenarien).
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+
+N     = 1_000_000
+beta  = 0.3
+gamma = 0.1
+sigma = 0.2
+I0    = 100
+S0    = N - I0
+
+def sir(t, y):
+    S, I, R = y
+    dS = -beta * S * I / N
+    dI =  beta * S * I / N - gamma * I
+    dR =  gamma * I
+    return (dS, dI, dR)
+
+def seir(t, y):
+    S, E, I, R = y
+    dS = -beta * S * I / N
+    dE =  beta * S * I / N - sigma * E
+    dI =  sigma * E - gamma * I
+    dR =  gamma * I
+    return (dS, dE, dI, dR)
+```
+
+# 1. SIR-Modell
+
+Drei Kompartimente: **S** (susceptible), **I** (infectious), **R** (recovered).
+
+$$
+\dot S = -\beta \frac{S I}{N}, \qquad
+\dot I = \beta \frac{S I}{N} - \gamma I, \qquad
+\dot R = \gamma I
+$$
+
+- $\beta$: effektive Kontaktrate × Übertragungswahrscheinlichkeit
+- $1/\gamma$: mittlere infektiöse Dauer
+- Basisreproduktionszahl: $R_0 = \beta/\gamma$
+
+Der Term $\beta SI/N$ ist die zentrale Annahme (*mass action*): infiziert wird
+proportional zur Begegnungswahrscheinlichkeit eines S-I-Paares.
+
+```{python}
+t_span = (0, 200)
+t_eval = np.linspace(*t_span, 1000)
+
+sol = solve_ivp(sir, t_span, [S0, I0, 0], t_eval=t_eval)
+plt.figure(figsize=(8, 4))
+for y, lbl in zip(sol.y, ["S", "I", "R"]):
+    plt.plot(sol.t, y, label=lbl)
+plt.xlabel("Tage"); plt.ylabel("Personen"); plt.legend()
+plt.title("SIR (β=0.3, γ=0.1, R0=3)")
+plt.tight_layout(); plt.show()
+```
+
+## R0 variieren: "flatten the curve"
+
+```{python}
+plt.figure(figsize=(8, 4))
+for b in [0.5, 0.3, 0.2, 0.12]:
+    beta = b
+    s = solve_ivp(sir, t_span, [S0, I0, 0], t_eval=t_eval)
+    plt.plot(s.t, s.y[1], label=f"β={b}, R0={b/0.1:.1f}")
+beta = 0.3
+plt.xlabel("Tage"); plt.ylabel("Infizierte"); plt.legend()
+plt.title("Effekt von β auf die Infektionswelle")
+plt.tight_layout(); plt.show()
+```
+
+Sinkt $R_0$ unter 1, läuft die Epidemie aus. Knapp über 1 → flache, lange Welle.
+
+# 2. SEIR-Modell
+
+Zusatz-Kompartiment **E** (exposed, latent infiziert, noch nicht infektiös).
+Realistischer für COVID-19, weil die Inkubationszeit nicht vernachlässigbar ist.
+
+$$
+\dot S = -\beta \frac{S I}{N},\quad
+\dot E = \beta \frac{S I}{N} - \sigma E,\quad
+\dot I = \sigma E - \gamma I,\quad
+\dot R = \gamma I
+$$
+
+$1/\sigma \approx 5$ Tage = mittlere Latenzzeit.
+
+```{python}
+sol = solve_ivp(seir, t_span, [S0, 0, I0, 0], t_eval=t_eval)
+plt.figure(figsize=(8, 4))
+for y, lbl in zip(sol.y, ["S", "E", "I", "R"]):
+    plt.plot(sol.t, y, label=lbl)
+plt.xlabel("Tage"); plt.ylabel("Personen"); plt.legend()
+plt.title("SEIR")
+plt.tight_layout(); plt.show()
+```
+
+Im Vergleich zu SIR ist der Peak verschoben und etwas niedriger, da die Latenz
+verzögert die Dynamik.
+
+# 3. SECIR-Modell
+
+Hinzu kommt **C** (carrier): bereits infektiös, aber asymptomatisch / präsymptomatisch.
+Das ist für SARS-CoV-2 zentral, weil ein erheblicher Teil der Übertragungen vor
+Symptombeginn passiert.
+
+- E: latent, **nicht** infektiös
+- C: infektiös, ohne Symptome (eigene Übertragungsrate $\beta_C$)
+- I: symptomatisch infektiös
+
+$$
+\begin{aligned}
+\dot S &= -(\beta I + \beta_C C)\,S/N \\
+\dot E &= (\beta I + \beta_C C)\,S/N - \sigma E \\
+\dot C &= \sigma E - \eta C \\
+\dot I &= \eta C - \gamma I \\
+\dot R &= \gamma I
+\end{aligned}
+$$
+
+```{python}
+# SECIR: E latent (nicht infektiös), C Carrier (infektiös, asymptomatisch), I symptomatisch
+eta = 0.25       # 1 / Carrier-Phase
+beta_c = 0.15    # Übertragungsrate Carrier
+
+def secir(t, y):
+    S, E, C, I, R = y
+    inf = (beta * I + beta_c * C) * S / N
+    dS = -inf
+    dE = inf - sigma * E
+    dC = sigma * E - eta * C
+    dI = eta * C - gamma * I
+    dR = gamma * I
+    return (dS, dE, dC, dI, dR)
+
+y0 = [S0, 0, 0, I0, 0]
+sol = solve_ivp(secir, t_span, y0, t_eval=t_eval)
+plt.figure(figsize=(8, 4))
+for y, lbl in zip(sol.y, ["S", "E", "C", "I", "R"]):
+    plt.plot(sol.t, y, label=lbl)
+plt.xlabel("Tage"); plt.ylabel("Personen"); plt.legend()
+plt.title("SECIR")
+plt.tight_layout(); plt.show()
+```
+
+## Vergleich SIR / SEIR / SECIR
+
+```{python}
+sols = {
+    "SIR":   solve_ivp(sir,   t_span, [S0, I0, 0],          t_eval=t_eval),
+    "SEIR":  solve_ivp(seir,  t_span, [S0, 0, I0, 0],       t_eval=t_eval),
+    "SECIR": solve_ivp(secir, t_span, [S0, 0, 0, I0, 0],    t_eval=t_eval),
+}
+plt.figure(figsize=(8, 4))
+plt.plot(sols["SIR"].t,   sols["SIR"].y[1],   label="SIR: I")
+plt.plot(sols["SEIR"].t,  sols["SEIR"].y[2],  label="SEIR: I")
+plt.plot(sols["SECIR"].t, sols["SECIR"].y[3], label="SECIR: I")
+plt.plot(sols["SECIR"].t, sols["SECIR"].y[2], "--", label="SECIR: C")
+plt.xlabel("Tage"); plt.ylabel("Personen"); plt.legend()
+plt.title("Symptomatische Infizierte über die Modelle")
+plt.tight_layout(); plt.show()
+```
+
+Mit jedem zusätzlichen Kompartiment verzögert sich der Peak und die Welle wird
+etwas breiter, die Dynamik wird realistischer aber qualitativ ähnlich.
+
+# 4. Neher-/Helmholtz-ähnliches Modell
+
+Das Neher-Modell (covid19-scenarios.org) und das Helmholtz-Modell (Khailaie 2020)
+erweitern SECIR um:
+
+- **H**: hospitalisiert
+- **U**: Intensivstation (ICU)
+- **D**: verstorben
+- zeitabhängiges $\beta(t)$ für Interventionen (Lockdown, Lockerung)
+- Anteile $m, c, f$ steuern, wer ins Krankenhaus / ICU / verstirbt
+
+Schema:
+
+```
+S → E → C → I → (R or H) → (R or U) → (R or D)
+```
+
+```{python}
+# Neher-ähnlich: SECIR + Hospital (H), ICU (U), Dead (D); β(t) für Lockdown
+def neher_like(t, y, beta_t, p):
+    S, E, C, I, H, U, R, D = y
+    b = beta_t(t); bc = p["beta_c_frac"] * b
+    Ntot = sum(y)
+    inf = (b * I + bc * C) * S / Ntot
+    dS = -inf
+    dE = inf - p["sigma"] * E
+    dC = p["sigma"] * E - p["eta"] * C
+    dI = p["eta"] * C - p["gamma"] * I
+    # Anteil m hospitalisiert, davon c -> ICU, davon f stirbt
+    dH = p["m"] * p["gamma"] * I - p["delta"] * H
+    dU = p["c"] * p["delta"] * H - p["theta"] * U
+    dD = p["f"] * p["theta"] * U
+    dR = ((1 - p["m"]) * p["gamma"] * I
+          + (1 - p["c"]) * p["delta"] * H
+          + (1 - p["f"]) * p["theta"] * U)
+    return (dS, dE, dC, dI, dH, dU, dR, dD)
+
+params = dict(
+    sigma=1/5.2, eta=1/2.9, gamma=1/6,
+    delta=1/8,     # H -> next
+    theta=1/10,    # U -> next
+    m=0.1, c=0.3, f=0.5,
+    beta_c_frac=0.5,
+)
+
+def beta_const(b):
+    return lambda t: b
+
+def beta_lockdown(b0, b1, t_on, t_off):
+    return lambda t: b1 if t_on <= t <= t_off else b0
+
+# Szenarien
+scenarios = {
+    "kein Eingriff":      beta_const(0.6),
+    "harter Lockdown":    beta_lockdown(0.6, 0.15, 30, 120),
+    "milder Lockdown":    beta_lockdown(0.6, 0.30, 30, 120),
+}
+
+t_span2 = (0, 365)
+t_eval2 = np.linspace(*t_span2, 2000)
+y0n = [N - I0, 0, 0, I0, 0, 0, 0, 0]
+
+results = {}
+for name, bt in scenarios.items():
+    rhs = lambda t, y, bt=bt: neher_like(t, y, bt, params)
+    results[name] = solve_ivp(rhs, t_span2, y0n, t_eval=t_eval2, max_step=1.0)
+```
+
+```{python}
+fig, ax = plt.subplots(1, 2, figsize=(13, 4))
+for name, s in results.items():
+    ax[0].plot(s.t, s.y[4], label=name)   # H
+    ax[1].plot(s.t, s.y[7], label=name)   # D
+ax[0].set_title("Hospitalisiert (H)"); ax[0].set_xlabel("Tage"); ax[0].legend()
+ax[1].set_title("Verstorben kumulativ (D)"); ax[1].set_xlabel("Tage"); ax[1].legend()
+plt.tight_layout(); plt.show()
+```
+
+```{python}
+# Vollständige Dynamik des Lockdown-Szenarios
+s = results["harter Lockdown"]
+labels = ["S", "E", "C", "I", "H", "U", "R", "D"]
+plt.figure(figsize=(10, 5))
+for y, lbl in zip(s.y, labels):
+    if lbl == "S":
+        continue  # S dominiert die Skala
+    plt.plot(s.t, y, label=lbl)
+plt.xlabel("Tage"); plt.ylabel("Personen"); plt.legend()
+plt.title("Neher-ähnlich: harter Lockdown Tag 30–120")
+plt.tight_layout(); plt.show()
+```
+
+# 5. RKI-Modell (an der Heiden & Buchholz 2020)
+
+Das RKI-Positionspapier (DOI 10.25646/6571.2) beschreibt ein SEIR-Modell mit
+Hospitalisierungs- und ICU-Kompartimenten. Wir reproduzieren die drei
+Szenarien ($R_0 \in \{2{,}5;\; 3{,}0;\; 3{,}5\}$) für eine Population von
+83 Mio. (Deutschland).
+
+## Kompartimente und Parameter
+
+$$
+\dot S = -\beta \tfrac{SI}{N},\quad
+\dot E = \beta \tfrac{SI}{N} - \sigma E,\quad
+\dot I = \sigma E - \gamma I
+$$
+
+$$
+\dot H = h\,\gamma I - \delta_H H,\quad
+\dot{ICU} = c\,\delta_H H - \delta_U\,ICU,\quad
+\dot D = f\,\delta_U\,ICU,\quad
+\dot R = (1-h)\gamma I + (1-c)\delta_H H + (1-f)\delta_U\,ICU
+$$
+
+| Symbol | Wert | Bedeutung |
+|--------|------|-----------|
+| $1/\sigma$ | 5.1 d | Latenzzeit |
+| $1/\gamma$ | 2.9 d | infektiöse Phase |
+| $h$ | 0.20 | Anteil Hospitalisierter |
+| $c$ | 0.25 | Anteil H → ICU |
+| $f$ | 0.50 | Anteil ICU → Tod |
+| $1/\delta_H$ | 14 d | Dauer Hospitalisation |
+| $1/\delta_U$ | 16 d | Dauer ICU |
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+
+N_de = 83_000_000
+I0_rki = 100
+
+rki_p = dict(
+    sigma  = 1 / 5.1,
+    gamma  = 1 / 2.9,
+    h      = 0.20,
+    c      = 0.25,
+    f      = 0.50,
+    delta_H = 1 / 14,
+    delta_U = 1 / 16,
+)
+
+def rki(t, y, beta, p):
+    S, E, I, H, ICU, R, D = y
+    inf  = beta * S * I / N_de
+    dS   = -inf
+    dE   = inf - p["sigma"] * E
+    dI   = p["sigma"] * E - p["gamma"] * I
+    dH   = p["h"] * p["gamma"] * I - p["delta_H"] * H
+    dICU = p["c"] * p["delta_H"] * H - p["delta_U"] * ICU
+    dD   = p["f"] * p["delta_U"] * ICU
+    dR   = ((1 - p["h"]) * p["gamma"] * I
+            + (1 - p["c"]) * p["delta_H"] * H
+            + (1 - p["f"]) * p["delta_U"] * ICU)
+    return (dS, dE, dI, dH, dICU, dR, dD)
+
+t_span_rki = (0, 365)
+t_eval_rki = np.linspace(*t_span_rki, 2000)
+y0_rki = [N_de - I0_rki, 0, I0_rki, 0, 0, 0, 0]
+
+scenarios_rki = {r"$R_0 = 2.5$": 2.5, r"$R_0 = 3.0$": 3.0, r"$R_0 = 3.5$": 3.5}
+
+res_rki = {}
+for label, R0 in scenarios_rki.items():
+    beta_rki = R0 * rki_p["gamma"]
+    res_rki[label] = solve_ivp(
+        lambda t, y, b=beta_rki: rki(t, y, b, rki_p),
+        t_span_rki, y0_rki, t_eval=t_eval_rki, max_step=1.0
+    )
+```
+
+```{python}
+# ICU-Kapazität Deutschland (RKI-Paper: ~28 000 Betten, davon ~20 000 COVID-nutzbar)
+ICU_CAP = 20_000
+
+fig, ax = plt.subplots(1, 2, figsize=(13, 4))
+for label, s in res_rki.items():
+    ax[0].plot(s.t, s.y[3], label=label)     # H
+    ax[1].plot(s.t, s.y[4], label=label)     # ICU
+
+ax[1].axhline(ICU_CAP, color="red", ls="--", label="ICU-Kapazität (20 000)")
+ax[0].set_title("Hospitalisiert (H)"); ax[0].set_xlabel("Tage"); ax[0].set_ylabel("Personen")
+ax[1].set_title("Intensivstation (ICU)"); ax[1].set_xlabel("Tage")
+for a in ax: a.legend()
+plt.tight_layout(); plt.show()
+```
+
+```{python}
+# Zusammenfassung: Peak-Werte
+print(f"{'Szenario':<15} {'Peak H':>12} {'Peak ICU':>12} {'Gesamt-D':>12}")
+for label, s in res_rki.items():
+    print(f"{label:<15} {s.y[3].max():>12.0f} {s.y[4].max():>12.0f} {s.y[6][-1]:>12.0f}")
+```
+
+## Diskussion RKI-Modell
+
+Alle drei Szenarien führen ohne Maßnahmen zu einer massiven Überschreitung der
+ICU-Kapazität. Der Peak-Zeitpunkt variiert stark ($R_0 = 2{,}5$: späterer, aber
+breiterer Peak; $R_0 = 3{,}5$: früher und schärfer). Die 20% Hospitalisierungsrate
+und 25% ICU-Rate aus dem Paper treiben die Kapazitätsfrage: genau das ist die
+Grundlage des *"flatten the curve"*-Arguments im deutschen Kontext.
+
+# 6. Diskussion
+
+- **SIR** liefert die Grundintuition (Peak, Herdenimmunität bei $1-1/R_0$),
+  ist aber zu grob für COVID-19.
+- **SEIR** berücksichtigt Latenz; verzögert Dynamik um ca. die Inkubationszeit.
+- **SECIR** trennt präsymptomatisch infektiöse (C) von symptomatischen (I), wichtig für COVID-19, da $\sim 40\,\%$ der Übertragungen vor Symptombeginn.
+- **Neher/Helmholtz** liefern Kapazitätsplanung (H, U) und Mortalität (D) und
+  ermöglichen Szenarien-Analysen via $\beta(t)$. Genau hier setzt
+  *flatten the curve* an: durch Senkung von $\beta$ wird der Peak unter die
+  ICU-Kapazität gedrückt, ohne die Gesamtfallzahl zwingend stark zu reduzieren, Lockerung danach kann zu zweiter Welle führen (sieht man im Lockdown-Szenario
+  nach Tag 120).
+- **RKI-Modell** (an der Heiden & Buchholz) nutzt deutsche Parameter und
+  reproduziert die drei $R_0$-Szenarien aus dem Positionspapier. In allen
+  Szenarien wird die ICU-Kapazität ohne Maßnahmen massiv überschritten,
+  das ist die epidemiologische Grundlage der deutschen Eindämmungspolitik.
+
+**Limitierungen:** keine Altersstruktur, keine räumliche Heterogenität, keine
+stochastischen Effekte, keine echten Daten gefittet. Die echten Modelle
+(Neher, Khailaie et al.) sind altersstratifiziert mit Kontaktmatrizen.
+
+**Quellen:**
+an der Heiden & Buchholz (RKI), DOI 10.25646/6571.2 ·
+Khailaie et al. 2020, doi.org/10.1101/2020.04.04.20053637 ·
+Neher Lab covid19-scenarios.org ·
+Ferguson et al. (Imperial College) DOI 10.25561/77482.

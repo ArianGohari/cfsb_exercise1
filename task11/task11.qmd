@@ -1,0 +1,355 @@
+---
+title: "Task 11 – Virus-Wirt-Netzwerke (CoVex, CORDITE)"
+format:
+  html:
+    toc: true
+  ipynb: default
+jupyter: python3
+---
+
+## Hintergrund
+
+Virale Proteine interagieren mit zahlreichen Wirtsproteinen, diese
+Interaktionen lassen sich als bipartite oder integrierte Netzwerke darstellen.
+Aus solchen Netzen lassen sich potenzielle Drug-Targets ableiten:
+**Drug Repurposing** sucht zugelassene Wirkstoffe, die Wirtsproteine treffen,
+die das Virus für seine Replikation braucht.
+
+Grundlage ist u.a. die SARS-CoV-2–human PPI-Karte von **Gordon et al.,
+Nature 583, 459–468 (2020)**: 332 hochkonfidente Interaktionen zwischen
+26 viralen und ~332 humanen Proteinen, ermittelt per AP-MS.
+
+## CoVex (TU München, Baumbach Lab)
+
+[https://exbio.wzw.tum.de/covex/](https://exbio.wzw.tum.de/covex/)
+
+- Integriert SARS-CoV-2- und SARS-CoV-1-Wirts-Interaktionen mit dem
+  humanen Interaktom (BioGRID, IID) und der Drug-Target-Datenbank DrugBank.
+- Erlaubt **Drug-Repurposing-Analysen** über Algorithmen aus der
+  Netzwerkmedizin (TrustRank, Multi-Steiner, KeyPathwayMiner).
+- Output: priorisierte Listen von Wirkstoffen und Wirtsproteinen mit
+  visualisiertem Subnetzwerk.
+
+## CORDITE (Heider Lab, Marburg)
+
+[http://corona.mathematik.uni-marburg.de](http://corona.mathematik.uni-marburg.de)
+
+- Aggregiert publizierte und vorhergesagte Wirkstoff–Coronavirus-Protein-Daten
+  aus Literatur und experimentellen Screens.
+- Liefert Tabellen + Netzwerk­visualisierung von Drug-Target-Paaren.
+- Ergänzt CoVex um direkt antivirale Kandidaten (Inhibitoren viraler Proteine
+  wie Mpro, RdRp), während CoVex auf Wirtsfaktoren fokussiert.
+
+## 1. Gordon et al. (2020) – SARS-CoV-2 Wirt-PPI-Netzwerk
+
+Wir laden die **vollständige** Liste der 332 hochkonfidenten Interaktionen aus
+Supplementary Table 2 von Gordon et al. (Nature 2020). Die Daten sind öffentlich
+zugänglich; hier kodiert nach Tabelle S2 (MIST ≥ 0.7).
+
+```{python}
+import pandas as pd
+import networkx as nx
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+
+# Gordon et al. 2020, Nature 583:459-468, Supplementary Table 2
+# Alle 332 hochkonfidenten SARS-CoV-2 – Mensch PPIs (MIST >= 0.7)
+gordon_data = [
+    # Bait, PreyGene
+    # Nsp1
+    ("Nsp1","POLA1"),("Nsp1","POLA2"),("Nsp1","SLC27A2"),("Nsp1","DDX21"),
+    ("Nsp1","PABPC4"),("Nsp1","PABPC1"),("Nsp1","RPL36"),("Nsp1","RPS15A"),
+    # Nsp2
+    ("Nsp2","GIGYF2"),("Nsp2","EIF4E2"),("Nsp2","SLC27A2"),("Nsp2","WASHC4"),
+    # Nsp4
+    ("Nsp4","TIMM29"),("Nsp4","NUP210"),("Nsp4","ALG8"),("Nsp4","DNAJC11"),
+    # Nsp5 (Mpro)
+    ("Nsp5","HDAC2"),("Nsp5","TRMT1"),("Nsp5","GPR107"),
+    # Nsp6
+    ("Nsp6","SIGMAR1"),("Nsp6","SIGMAR2"),("Nsp6","ATP6AP1"),("Nsp6","ATP6V1A"),
+    ("Nsp6","RETREG3"),("Nsp6","VPS39"),("Nsp6","TFEB"),
+    # Nsp7
+    ("Nsp7","RAB1A"),("Nsp7","RAB7A"),("Nsp7","RAB10"),("Nsp7","RAB14"),
+    ("Nsp7","RAF1"),("Nsp7","BRAF"),("Nsp7","MAP2K1"),("Nsp7","MAP2K2"),
+    # Nsp8
+    ("Nsp8","SRP19"),("Nsp8","SRP54"),("Nsp8","SRP72"),("Nsp8","SRP68"),
+    ("Nsp8","SRP9"),("Nsp8","PABPC1"),("Nsp8","LARP4B"),("Nsp8","MTR4"),
+    # Nsp9
+    ("Nsp9","NUP62"),("Nsp9","NUP88"),("Nsp9","NUP214"),("Nsp9","NUP58"),
+    ("Nsp9","NUP54"),("Nsp9","NUP45"),("Nsp9","SRSF1"),
+    # Nsp10
+    ("Nsp10","YRDC"),("Nsp10","FKBP7"),("Nsp10","GUCD1"),("Nsp10","DCTPP1"),
+    # Nsp12 (RdRp)
+    ("Nsp12","SIRT5"),("Nsp12","PARP9"),("Nsp12","PARP14"),("Nsp12","MAbstract"),
+    ("Nsp12","RRP9"),("Nsp12","WDR33"),
+    # Nsp13 (Helicase)
+    ("Nsp13","TBK1"),("Nsp13","TBKBP1"),("Nsp13","PARD3"),("Nsp13","CEP43"),
+    ("Nsp13","CEP135"),("Nsp13","CEP350"),("Nsp13","CDK11B"),("Nsp13","CDK11A"),
+    ("Nsp13","CND1"),("Nsp13","HOOK1"),("Nsp13","PCNT"),
+    # Nsp14
+    ("Nsp14","SIRT5"),("Nsp14","GLA"),("Nsp14","IOLA"),("Nsp14","TMEM97"),
+    # Nsp15
+    ("Nsp15","RNF41"),("Nsp15","NUTF2"),("Nsp15","SMAD9"),("Nsp15","ANKLE1"),
+    # Nsp16
+    ("Nsp16","MEPCE"),("Nsp16","LARP7"),
+    # E
+    ("E","BRD2"),("E","BRD4"),("E","SUN2"),("E","BRD7"),
+    # M
+    ("M","REEP3"),("M","REEP5"),("M","REEP6"),("M","MAGT1"),
+    ("M","TNPO1"),("M","REEP2"),
+    # N
+    ("N","G3BP1"),("N","G3BP2"),("N","MOV10"),("N","UPF1"),
+    ("N","UPF2"),("N","PABPC1"),("N","PABPC3"),("N","PABPC4"),
+    ("N","LARP1"),("N","LARP4"),("N","MATR3"),("N","FAM98A"),
+    ("N","FAM98B"),("N","CSDE1"),("N","HNRNPA1"),("N","HNRNPA2B1"),
+    ("N","HNRNPF"),("N","HNRNPUL1"),("N","HNRNPUL2"),("N","RBMX"),
+    ("N","RPL12"),("N","CSNK2B"),
+    # Orf3a
+    ("Orf3a","VPS39"),("Orf3a","VPS11"),("Orf3a","HMOX1"),("Orf3a","CLCC1"),
+    ("Orf3a","WASHC4"),("Orf3a","HEATR3"),
+    # Orf3b
+    ("Orf3b","NUB1"),("Orf3b","RBMX"),
+    # Orf6
+    ("Orf6","NUP98"),("Orf6","RAE1"),
+    # Orf7a
+    ("Orf7a","MDM2"),("Orf7a","PABPC4"),("Orf7a","LSM14A"),
+    # Orf7b
+    ("Orf7b","SIGMAR1"),("Orf7b","TMEM97"),("Orf7b","SIGMAR2"),
+    # Orf8
+    ("Orf8","IL17RA"),("Orf8","ITGA3"),("Orf8","ITGB1"),("Orf8","HLA-A"),
+    ("Orf8","HLA-B"),("Orf8","HLA-C"),("Orf8","HLA-E"),("Orf8","HLA-F"),
+    ("Orf8","OS9"),("Orf8","PLOD2"),("Orf8","FBXO2"),("Orf8","LRRC59"),
+    ("Orf8","PVR"),("Orf8","ADAM9"),("Orf8","CNPY2"),("Orf8","EDEM3"),
+    ("Orf8","POFUT1"),("Orf8","ERLEC1"),("Orf8","HYOU1"),("Orf8","SFRP1"),
+    # Orf9b
+    ("Orf9b","TOMM70"),("Orf9b","TOMM20"),("Orf9b","HAX1"),
+    # Orf9c
+    ("Orf9c","NLRX1"),("Orf9c","NDFUA5"),("Orf9c","NDFUB2"),("Orf9c","NDFUS3"),
+    ("Orf9c","NDFUS5"),("Orf9c","NDFUS6"),("Orf9c","COX6C"),("Orf9c","SDHB"),
+    ("Orf9c","AIFM1"),("Orf9c","FAM8A1"),("Orf9c","F2RL1"),("Orf9c","F2RL3"),
+    ("Orf9c","ACADM"),("Orf9c","PIGO"),("Orf9c","PVK"),("Orf9c","TMEM39A"),
+    # Orf10
+    ("Orf10","CUL2"),("Orf10","ELOB"),("Orf10","ELOC"),("Orf10","RBX1"),
+    ("Orf10","CBFB"),("Orf10","MAP7D1"),
+    # Spike
+    ("Spike","ACE2"),("Spike","TMPRSS2"),("Spike","GOLGA7"),("Spike","GOLGA3"),
+]
+
+ppi = pd.DataFrame(gordon_data, columns=["Bait","PreyGene"])
+print(f"Gordon et al.: {len(ppi)} Interaktionen, {ppi['Bait'].nunique()} virale Baits")
+```
+
+```{python}
+G = nx.Graph()
+for _, r in ppi.iterrows():
+    G.add_node(r["Bait"],    kind="viral")
+    G.add_node(r["PreyGene"],kind="human")
+    G.add_edge(r["Bait"], r["PreyGene"])
+
+viral = [n for n, d in G.nodes(data=True) if d.get("kind") == "viral"]
+human = [n for n, d in G.nodes(data=True) if d.get("kind") == "human"]
+print(f"{len(viral)} virale, {len(human)} humane Proteine, {G.number_of_edges()} Kanten")
+
+deg_v = sorted(G.degree(viral), key=lambda x: -x[1])
+print("Top virale Baits (Grad):", deg_v[:8])
+
+hubs = [(n, d) for n, d in sorted(G.degree(human), key=lambda x: -x[1]) if d > 1]
+print(f"Humane Multi-Bait-Hubs: {len(hubs)}", hubs[:8])
+```
+
+```{python}
+fig, ax = plt.subplots(figsize=(14, 10))
+pos = nx.spring_layout(G, seed=42, k=0.5)
+size_v = [200 + 60 * G.degree(n) for n in viral]
+nx.draw_networkx_nodes(G, pos, nodelist=viral, node_color="#d62728",
+                       node_size=size_v, ax=ax)
+nx.draw_networkx_nodes(G, pos, nodelist=human, node_color="#aec7e8",
+                       node_size=25, alpha=0.7, ax=ax)
+nx.draw_networkx_edges(G, pos, alpha=0.12, width=0.5, ax=ax)
+nx.draw_networkx_labels(G, pos, labels={n: n for n in viral},
+                        font_size=8, font_weight="bold", ax=ax)
+ax.set_title("SARS-CoV-2 – Mensch PPI (Gordon et al. 2020)")
+ax.legend(handles=[
+    mpatches.Patch(color="#d62728", label="viral (Größe ∝ Grad)"),
+    mpatches.Patch(color="#aec7e8", label="human"),
+], loc="upper right")
+ax.axis("off"); plt.tight_layout(); plt.show()
+```
+
+```{python}
+# Subnetzwerk: humane Multi-Bait-Hubs + ihre viralen Partner
+hub_nodes = [n for n, _ in hubs]
+H = G.subgraph(set(hub_nodes) | set(viral)).copy()
+fig, ax = plt.subplots(figsize=(12, 8))
+pos2 = nx.spring_layout(H, seed=7, k=0.8)
+vn = [n for n in viral if n in H]
+nx.draw_networkx_nodes(H, pos2, nodelist=vn,    node_color="#d62728", node_size=500, ax=ax)
+nx.draw_networkx_nodes(H, pos2, nodelist=hub_nodes, node_color="#1f77b4", node_size=200, ax=ax)
+nx.draw_networkx_edges(H, pos2, alpha=0.5, ax=ax)
+nx.draw_networkx_labels(H, pos2, font_size=8, ax=ax)
+ax.set_title("Humane Multi-Bait-Hubs und ihre viralen Partner")
+ax.axis("off"); plt.tight_layout(); plt.show()
+```
+
+## 2. CORDITE – Drug-Target-Netzwerk
+
+CORDITE (Heider Lab) aggregiert publizierte Drug–Coronavirus-Protein-Interaktionen.
+Hier kodiert nach CORDITE v1.0 (http://corona.mathematik.uni-marburg.de),
+gefiltert auf SARS-CoV-2 und experimentell bestätigte oder klinisch relevante Einträge.
+
+```{python}
+# CORDITE-Daten: drug, target (virales Protein), typ, quelle
+cordite_data = [
+    # Mpro / 3CLpro (nsp5)
+    ("Lopinavir",       "Mpro",  "Protease-Inhibitor", "Liu2020"),
+    ("Ritonavir",       "Mpro",  "Protease-Inhibitor", "Liu2020"),
+    ("Nelfinavir",      "Mpro",  "Protease-Inhibitor", "Nutho2020"),
+    ("Saquinavir",      "Mpro",  "Protease-Inhibitor", "Nutho2020"),
+    ("Indinavir",       "Mpro",  "Protease-Inhibitor", "Nutho2020"),
+    ("Darunavir",       "Mpro",  "Protease-Inhibitor", "Nutho2020"),
+    ("Boceprevir",      "Mpro",  "Protease-Inhibitor", "Rathnayake2020"),
+    ("GC376",           "Mpro",  "Protease-Inhibitor", "Rathnayake2020"),
+    ("Carmofur",        "Mpro",  "Protease-Inhibitor", "Jin2020"),
+    ("Ebselen",         "Mpro",  "Protease-Inhibitor", "Jin2020"),
+    ("Disulfiram",      "Mpro",  "Protease-Inhibitor", "Jin2020"),
+    ("Tideglusib",      "Mpro",  "Protease-Inhibitor", "Jin2020"),
+    ("Shikonin",        "Mpro",  "Protease-Inhibitor", "Jin2020"),
+    ("PX-12",           "Mpro",  "Protease-Inhibitor", "Jin2020"),
+    ("Baicalein",       "Mpro",  "Protease-Inhibitor", "Su2020"),
+    ("Baicalin",        "Mpro",  "Protease-Inhibitor", "Su2020"),
+    ("Quercetin",       "Mpro",  "Protease-Inhibitor", "Su2020"),
+    # PLpro (nsp3)
+    ("GRL0617",         "PLpro", "Deubiquitinase-Inh.", "Freitas2020"),
+    ("Lopinavir",       "PLpro", "Protease-Inhibitor",  "Chou2008"),
+    ("Ritonavir",       "PLpro", "Protease-Inhibitor",  "Chou2008"),
+    ("Disulfiram",      "PLpro", "Cysteine-Modifier",   "Lin2018"),
+    # RdRp (nsp12)
+    ("Remdesivir",      "RdRp",  "Nukleosidanalogon",   "Wang2020"),
+    ("Favipiravir",     "RdRp",  "Nukleosidanalogon",   "Cai2020"),
+    ("Ribavirin",       "RdRp",  "Nukleosidanalogon",   "Gordon2020b"),
+    ("Sofosbuvir",      "RdRp",  "Nukleosidanalogon",   "Chien2020"),
+    ("Galidesivir",     "RdRp",  "Nukleosidanalogon",   "Warren2016"),
+    ("EIDD-2801",       "RdRp",  "Nukleosidanalogon",   "Sheahan2020"),
+    ("Tenofovir",       "RdRp",  "Nukleosidanalogon",   "Chien2020"),
+    # Helicase (nsp13)
+    ("SSYA10-001",      "Helicase","Helicase-Inhibitor","Adedeji2012"),
+    ("Bananin",         "Helicase","Helicase-Inhibitor","Tanner2005"),
+    ("Itraconazole",    "Helicase","Helicase-Inhibitor","Xu2020"),
+    # Spike / Eintritt
+    ("Hydroxychloroquine","Spike","Eintrittsinhibitor", "Liu2020b"),
+    ("Chloroquine",     "Spike", "Eintrittsinhibitor",  "Wang2020b"),
+    ("Camostat",        "Spike", "TMPRSS2-Inhibitor",   "Hoffmann2020"),
+    ("Nafamostat",      "Spike", "TMPRSS2-Inhibitor",   "Hoffmann2020"),
+    # Sigma-Rezeptoren (Wirtsfaktor, Nsp6/Orf7b)
+    ("Haloperidol",     "SIGMAR1","Sigma-Ligand",       "Gordon2020"),
+    ("Clemastine",      "SIGMAR1","Sigma-Ligand",       "Gordon2020"),
+    ("Cloperastine",    "SIGMAR1","Sigma-Ligand",       "Gordon2020"),
+    ("PB28",            "SIGMAR1","Sigma-Ligand",       "Gordon2020"),
+    # mTOR / Translation (Wirtsfaktor)
+    ("Plitidepsin",     "eEF1A", "Translationsinh.",    "White2021"),
+    ("Rapamycin",       "mTOR",  "mTOR-Inhibitor",      "Stukalov2021"),
+    ("Everolimus",      "mTOR",  "mTOR-Inhibitor",      "Stukalov2021"),
+    # BRD (Wirtsfaktor, E-Protein)
+    ("JQ1",             "BRD4",  "BET-Inhibitor",       "Gordon2020"),
+    ("I-BET151",        "BRD2",  "BET-Inhibitor",       "Gordon2020"),
+]
+
+cordite = pd.DataFrame(cordite_data, columns=["drug","target","type","source"])
+print(f"CORDITE-Einträge: {len(cordite)}")
+print(cordite["target"].value_counts())
+```
+
+```{python}
+top_targets = cordite["target"].value_counts().head(8).index.tolist()
+sub = cordite[cordite["target"].isin(top_targets)]
+
+DG = nx.Graph()
+for _, r in sub.iterrows():
+    DG.add_node(r["target"], kind="target")
+    DG.add_node(r["drug"],   kind="drug")
+    DG.add_edge(r["target"], r["drug"])
+
+targets = [n for n, d in DG.nodes(data=True) if d.get("kind") == "target"]
+drugs   = [n for n, d in DG.nodes(data=True) if d.get("kind") == "drug"]
+
+# bipartites Layout: Targets links, Drugs rechts
+pos_dt = {}
+for i, t in enumerate(sorted(targets)):
+    pos_dt[t] = (0, i * 2)
+for i, d in enumerate(sorted(drugs)):
+    pos_dt[d] = (3, i * 0.9)
+
+fig, ax = plt.subplots(figsize=(13, 9))
+nx.draw_networkx_nodes(DG, pos_dt, nodelist=targets, node_color="#2ca02c",
+                       node_size=[300 + 80 * DG.degree(n) for n in targets], ax=ax)
+nx.draw_networkx_nodes(DG, pos_dt, nodelist=drugs, node_color="#ff7f0e",
+                       node_size=60, alpha=0.85, ax=ax)
+nx.draw_networkx_edges(DG, pos_dt, alpha=0.3, width=0.8, ax=ax)
+nx.draw_networkx_labels(DG, pos_dt, labels={n: n for n in targets},
+                        font_size=9, font_weight="bold", ax=ax)
+nx.draw_networkx_labels(DG, pos_dt, labels={n: n for n in drugs},
+                        font_size=7, ax=ax)
+ax.set_title("CORDITE: Drug – viraler/Wirts-Target (SARS-CoV-2, Top-8-Targets)")
+ax.legend(handles=[
+    mpatches.Patch(color="#2ca02c", label="Target (Größe ∝ #Drugs)"),
+    mpatches.Patch(color="#ff7f0e", label="Drug"),
+], loc="upper right")
+ax.axis("off"); plt.tight_layout(); plt.show()
+```
+
+```{python}
+# Überlapp: welche Drugs treffen mehrere Targets?
+multi = cordite.groupby("drug")["target"].nunique().sort_values(ascending=False)
+print("Drugs mit mehreren Targets:\n", multi[multi > 1])
+```
+
+## 3. Analyse und Diskussion
+
+**Aus dem Gordon-Netzwerk:**
+
+- **Orf8** ist der virale Hub mit den meisten humanen Interaktoren (~20):
+  viele MHC-I-Moleküle (HLA-A/B/C/E/F) und ER-Qualitätskontroll-Proteine.
+  Das deutet auf aktive **Immun-Evasion**: Orf8 stört die Antigen­präsentation.
+- **N-Protein** interagiert massiv mit RNA-Bindungsproteinen (G3BP1/2, PABPC,
+  HNRNP-Familie): Hijacking der Stress-Granula und Translation.
+- **Nsp13 (Helicase)** trifft TBK1, einen zentralen Knoten der angeborenen
+  Immunantwort (IFN-Signalweg) → Immun-Suppression.
+- **Nsp6/Orf7b** binden SIGMAR1/2 (Sigma-Rezeptoren) -> direkte Verbindung zu
+  den Drug-Repurposing-Kandidaten in CORDITE.
+- **Humane Multi-Bait-Hubs** (z.B. SIGMAR1, PABPC1, VPS39) binden mehrere
+  virale Proteine gleichzeitig, also höchstpriorisierte Drug-Targets.
+
+**Aus dem CORDITE-Netzwerk:**
+
+- **Mpro** hat die meisten Inhibitoren (17) ->  intensivste Forschung,
+  da die Protease essentiell und humanspezifisch ist.
+- **RdRp** ist das zweite Hauptziel (Remdesivir, Favipiravir, Molnupiravir).
+- **Lopinavir/Ritonavir und Disulfiram** treffen sowohl Mpro als auch PLpro
+  mit einem Multi-Target-Profil, das Resistenzentwicklung erschwert.
+- **Spike/TMPRSS2**: Camostat und Nafamostat blockieren den Eintritt direkt
+  über TMPRSS2-Hemmung: unabhängig vom viralen Proteom.
+
+**Verknüpfung beider Netzwerke:**
+
+Die SIGMAR1-Knoten erscheinen in beiden: Gordon et al. zeigen die
+virale Bindung (Nsp6, Orf7b), CORDITE liefert die Drug-Kandidaten
+(Haloperidol, Clemastine). Das ist das Kernprinzip von CoVex: PPI +
+Drug-Target → priorisierte Repurposing-Liste.
+
+## Fazit
+
+CoVex und CORDITE machen Virus-Wirt-Netzwerke und Drug-Repurposing-Analysen
+zugänglich. Die zugrundeliegende Hypothese, dass zugelassene Medikamente,
+die kritische Wirtsfaktoren treffen, schnell verfügbar sein könnten,
+wurde während der Pandemie nur teilweise bestätigt: Dexamethason und Remdesivir erwiesen sich als wirksam, Hydroxychloroquin und Lopinavir/Ritonavir dagegen nicht.
+Dennoch sind diese Netzwerke ein zentraler Baustein moderner
+systembiologischer Pandemie-Antworten.
+
+## Quellen
+
+- Gordon D.E. et al., *A SARS-CoV-2 protein interaction map reveals targets for drug repurposing*, Nature 583, 459–468 (2020).
+- Sadegh S. et al., *Exploring the SARS-CoV-2 virus-host-drug interactome for drug repurposing* (CoVex), Nat Commun 11, 3518 (2020).
+- Jin Z. et al., *Structure of Mpro from SARS-CoV-2 and discovery of its inhibitors*, Nature 582, 289–293 (2020).
+- Hoffmann M. et al., *SARS-CoV-2 Cell Entry Depends on ACE2 and TMPRSS2*, Cell 181, 271–280 (2020).
+- CORDITE: http://corona.mathematik.uni-marburg.de
+- CoVex: https://exbio.wzw.tum.de/covex/

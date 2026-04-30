@@ -1,0 +1,278 @@
+---
+title: "Task 6 – Colizza-Modell & Vergleich mit Neher"
+format:
+  html:
+    toc: true
+  ipynb: default
+jupyter: python3
+---
+
+# Einführung
+
+Wir implementieren das Colizza/INSERM-Modell (Di Domenico et al., *Expected impact
+of lockdown in Île-de-France and possible exit strategies*, medRxiv 2020) als
+deterministische ODE-Variante ohne Altersstruktur und vergleichen es mit dem
+Neher-ähnlichen Modell aus Task 5.
+
+# 1. Colizza-Modell
+
+## Kompartimente
+
+```
+S → E → Ip ┬→ Ia                      → R
+            ├→ Ips                     → R
+            ├→ Ims                     → R
+            └→ Iss → ┬→ H   → R/D
+                     └→ ICU → R/D
+```
+
+- **E**: latent, nicht infektiös
+- **Ip**: prodromisch, infektiös (vor Symptombeginn)
+- **Ia / Ips / Ims / Iss**: asymptomatisch / pauci- / mild / severe
+- **H, ICU, D**: Krankenhaus, Intensivstation, verstorben
+
+Severe Fälle (Iss) gehen zu 36% in ICU, der Rest in H. Ip, Ia, Ips übertragen
+mit reduzierter Rate $r_\beta = 0.51$, Iss reduziert seine Kontakte um 75%.
+
+## Infektionskraft
+
+$$
+\lambda(t) = \beta(t) \cdot \frac{r_\beta(I_p + I_a + I_{ps}) + I_{ms} + 0{,}25\, I_{ss}}{N}
+$$
+
+## ODEs
+
+$$
+\begin{aligned}
+\dot S &= -\lambda S \\
+\dot E &= \lambda S - \epsilon E \\
+\dot I_p &= \epsilon E - \mu_p I_p \\
+\dot I_a &= p_a \mu_p I_p - \mu I_a \\
+\dot I_{ps} &= (1-p_a)\, p_{ps} \mu_p I_p - \mu I_{ps} \\
+\dot I_{ms} &= (1-p_a)\, p_{ms} \mu_p I_p - \mu I_{ms} \\
+\dot I_{ss} &= (1-p_a)\, p_{ss} \mu_p I_p - \mu I_{ss} \\
+\dot H &= (1-p_{ICU})\, \mu I_{ss} - (\lambda_{H,R} + \lambda_{H,D})\, H \\
+\dot{ICU} &= p_{ICU}\, \mu I_{ss} - (\lambda_{ICU,R} + \lambda_{ICU,D})\, ICU \\
+\dot R &= \mu(I_a + I_{ps} + I_{ms}) + \lambda_{H,R} H + \lambda_{ICU,R} ICU \\
+\dot D &= \lambda_{H,D} H + \lambda_{ICU,D} ICU
+\end{aligned}
+$$
+
+## Parameter (Tab. S1, Erwachsenen-Werte)
+
+| Symbol | Wert | Bedeutung |
+|---|---|---|
+| $1/\epsilon$ | 3.7 d | Latenz |
+| $1/\mu_p$ | 1.5 d | prodromisch |
+| $1/\mu$ | 2.3 d | infektiös |
+| $r_\beta$ | 0.51 | reduzierte Infektiosität (Ip, Ia, Ips) |
+| $p_a, p_{ps}, p_{ms}, p_{ss}$ | 0.2, 0.2, 0.7, 0.1 | Verzweigung |
+| $p_{ICU}$ | 0.36 | severe → ICU |
+| $\lambda_{H,R}, \lambda_{H,D}$ | 0.072, 0.0042 | H → R / D |
+| $\lambda_{ICU,R}, \lambda_{ICU,D}$ | 0.05, 0.0074 | ICU → R / D |
+| $R_0$ | 3.0 | → $\beta \approx 0.98$ |
+
+# 2. Simulation
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+
+# Parameter aus Di Domenico et al. 2020, Table S1 (Erwachsene)
+eps      = 1 / 3.7
+mu_p     = 1 / 1.5
+mu       = 1 / 2.3
+p_a      = 0.2
+p_ps     = 0.2
+p_ms     = 0.7
+p_ss     = 0.1
+p_icu    = 0.36
+lam_H_R  = 0.072
+lam_H_D  = 0.0042
+lam_ICU_R = 0.05
+lam_ICU_D = 0.0074
+r_beta   = 0.51
+beta0    = 3.0 / (r_beta / mu_p + 1 / mu)
+
+def colizza(t, y, beta_t=None):
+    S, E, Ip, Ia, Ips, Ims, Iss, H, ICU, R, D = y
+    N = sum(y)
+    b = beta_t(t) if beta_t else beta0
+    lam = b * (r_beta * (Ip + Ia + Ips) + Ims + 0.25 * Iss) / N
+    dS   = -lam * S
+    dE   =  lam * S - eps * E
+    dIp  =  eps * E - mu_p * Ip
+    out_p = mu_p * Ip
+    dIa  =  p_a * out_p - mu * Ia
+    dIps = (1 - p_a) * p_ps * out_p - mu * Ips
+    dIms = (1 - p_a) * p_ms * out_p - mu * Ims
+    dIss = (1 - p_a) * p_ss * out_p - mu * Iss
+    dH   = (1 - p_icu) * mu * Iss - (lam_H_R + lam_H_D) * H
+    dICU =  p_icu * mu * Iss - (lam_ICU_R + lam_ICU_D) * ICU
+    dR   =  mu * (Ia + Ips + Ims) + lam_H_R * H + lam_ICU_R * ICU
+    dD   =  lam_H_D * H + lam_ICU_D * ICU
+    return (dS, dE, dIp, dIa, dIps, dIms, dIss, dH, dICU, dR, dD)
+```
+
+```{python}
+N = 1_000_000
+I0 = 100
+y0 = [N - I0, 0, I0, 0, 0, 0, 0, 0, 0, 0, 0]
+t_span = (0, 365)
+t_eval = np.linspace(*t_span, 2000)
+
+sol = solve_ivp(colizza, t_span, y0, t_eval=t_eval, max_step=1.0)
+labels = ["S", "E", "Ip", "Ia", "Ips", "Ims", "Iss", "H", "ICU", "R", "D"]
+```
+
+```{python}
+plt.figure(figsize=(10, 5))
+for y, lbl in zip(sol.y, labels):
+    if lbl == "S":
+        continue
+    plt.plot(sol.t, y, label=lbl)
+plt.xlabel("Tage"); plt.ylabel("Personen"); plt.legend(ncol=2)
+plt.title("Colizza-Modell, kein Eingriff (R0=3)")
+plt.tight_layout(); plt.show()
+```
+
+# 3. Lockdown-Szenarien
+
+Lockdown senkt $\beta$ um den Faktor 0.32 (entspricht 80% Kontakt-Reduktion;
+Paper: $R_{LD} \approx 0.68$).
+
+```{python}
+def beta_const(b):
+    return lambda t: b
+
+def beta_lockdown(b0, b1, t_on, t_off):
+    return lambda t: b1 if t_on <= t <= t_off else b0
+
+scenarios = {
+    "kein Eingriff":   beta_const(beta0),
+    "Lockdown 80%":    beta_lockdown(beta0, 0.32 * beta0, 30, 120),
+    "Lockdown 70%":    beta_lockdown(beta0, 0.50 * beta0, 30, 120),
+}
+
+results = {}
+for name, bt in scenarios.items():
+    rhs = lambda t, y, bt=bt: colizza(t, y, bt)
+    results[name] = solve_ivp(rhs, t_span, y0, t_eval=t_eval, max_step=1.0)
+```
+
+```{python}
+fig, ax = plt.subplots(1, 3, figsize=(14, 4))
+for name, s in results.items():
+    ax[0].plot(s.t, s.y[8], label=name)   # ICU
+    ax[1].plot(s.t, s.y[7], label=name)   # H
+    ax[2].plot(s.t, s.y[10], label=name)  # D
+ax[0].set_title("ICU"); ax[0].set_xlabel("Tage"); ax[0].legend()
+ax[1].set_title("Hospitalisiert"); ax[1].set_xlabel("Tage")
+ax[2].set_title("Verstorben kumulativ"); ax[2].set_xlabel("Tage")
+plt.tight_layout(); plt.show()
+```
+
+Ohne Eingriff überschreitet die ICU-Belegung jede realistische Kapazität
+(Île-de-France: 2500 Betten). Lockdown verzögert und drückt den Peak deutlich,
+nach Lockerung aber zweite Welle.
+
+# 4. Vergleich Neher vs. Colizza
+
+```{python}
+# Neher-ähnliches Modell aus Task 5 (kompakt nachgebaut)
+def neher_like(t, y, beta_t, p):
+    S, E, C, I, H, U, R, D = y
+    b = beta_t(t); bc = p["beta_c_frac"] * b
+    Ntot = sum(y)
+    inf = (b * I + bc * C) * S / Ntot
+    dS = -inf
+    dE = inf - p["sigma"] * E
+    dC = p["sigma"] * E - p["eta"] * C
+    dI = p["eta"] * C - p["gamma"] * I
+    dH = p["m"] * p["gamma"] * I - p["delta"] * H
+    dU = p["c"] * p["delta"] * H - p["theta"] * U
+    dD = p["f"] * p["theta"] * U
+    dR = ((1 - p["m"]) * p["gamma"] * I
+          + (1 - p["c"]) * p["delta"] * H
+          + (1 - p["f"]) * p["theta"] * U)
+    return (dS, dE, dC, dI, dH, dU, dR, dD)
+
+# Parameter analog zu Colizza wählen, R0 ~ 3
+neher_p = dict(
+    sigma=1/3.7, eta=1/1.5, gamma=1/2.3,
+    delta=1/8, theta=1/10,
+    m=0.08, c=0.36, f=0.3,
+    beta_c_frac=0.51,
+)
+b_neher = 3.0 / (neher_p["beta_c_frac"]/neher_p["eta"] + 1/neher_p["gamma"])
+
+y0n = [N - I0, 0, 0, I0, 0, 0, 0, 0]
+rhs_n = lambda t, y: neher_like(t, y, beta_const(b_neher), neher_p)
+sol_n = solve_ivp(rhs_n, t_span, y0n, t_eval=t_eval, max_step=1.0)
+
+sol_c = results["kein Eingriff"]
+```
+
+```{python}
+fig, ax = plt.subplots(1, 3, figsize=(14, 4))
+# klinische Fälle: Colizza Ims+Iss vs. Neher I
+ax[0].plot(sol_c.t, sol_c.y[5] + sol_c.y[6], label="Colizza: Ims+Iss")
+ax[0].plot(sol_n.t, sol_n.y[3], label="Neher: I")
+ax[0].set_title("symptomatisch infektiös"); ax[0].legend()
+
+ax[1].plot(sol_c.t, sol_c.y[7], label="Colizza: H")
+ax[1].plot(sol_c.t, sol_c.y[8], label="Colizza: ICU")
+ax[1].plot(sol_n.t, sol_n.y[4], label="Neher: H")
+ax[1].plot(sol_n.t, sol_n.y[5], label="Neher: ICU")
+ax[1].set_title("Hospital / ICU"); ax[1].legend()
+
+ax[2].plot(sol_c.t, sol_c.y[10], label="Colizza")
+ax[2].plot(sol_n.t, sol_n.y[7], label="Neher")
+ax[2].set_title("Verstorben kumulativ"); ax[2].legend()
+
+for a in ax: a.set_xlabel("Tage")
+plt.tight_layout(); plt.show()
+```
+
+# 5. Diskussion
+
+**Strukturelle Unterschiede:**
+
+| | Neher | Colizza |
+|---|---|---|
+| Symptom-Schweregrade | nur ein I | Ia / Ips / Ims / Iss (vier Zweige) |
+| präsymptomatisch | C (asymp. Carrier) | Ip (prodromisch) |
+| H und ICU | sequentiell (H → ICU) | parallel (Iss verzweigt) |
+| Mortalität | nur in ICU | in H und ICU |
+| Originalversion | deterministisch, alters­stratifiziert | stochastisch, alters­stratifiziert |
+
+**Beobachtungen unserer Simulationen:**
+
+- Beide Modelle reproduzieren die typische SIR-artige Welle bei $R_0 = 3$.
+- Colizza trennt die Übertragungswege feiner, z.B. ist die **direkte Mortalität in H**
+  (nicht nur ICU) eine wichtige Eigenschaft, die Neher in unserer Variante nicht hat.
+- Die parallele H/ICU-Aufteilung in Colizza erzeugt früher steigende ICU-Zahlen,
+  während Neher (sequentiell) die ICU-Welle leicht verzögert.
+- Lockdown wirkt in beiden Modellen ähnlich (Peak verschiebt sich, fällt ab),
+  Lockerung führt zur zweiten Welle.
+
+**Limitierungen:**
+- Keine Altersstruktur: gerade Colizza lebt von altersspezifischen Kontaktmatrizen
+  (Schule/Arbeit/Haushalt), und der ganze Effekt von "Schulen schließen,
+  Senioren isolieren" lässt sich ohne Altersgruppen nicht abbilden.
+- Keine stochastische Variabilität (das Original ist eine Monte-Carlo-Simulation).
+- Keine Kalibrierung an echte Hospitaldaten, $\beta$ nur grob aus $R_0$ über
+  Next-Generation-Approximation.
+- Erwachsenen-Werte für alle Übergangsraten (Senioren-Mortalität ist deutlich höher).
+
+**Konsequenzen:**
+Beide Modelle stimmen qualitativ überein: ohne Maßnahmen ICU-Kollaps,
+mit Lockdown Peak unter Kapazität drückbar, aber Aufhebung führt zu
+zweiter Welle. Die Hauptaussage des Colizza-Papers, dass Exit-Strategien
+ohne flankierende Tests/Tracing am ICU-Limit scheitern, lässt sich erst mit
+Altersstruktur quantitativ reproduzieren.
+
+**Quelle:**
+Di Domenico L. et al., *Expected impact of lockdown in Île-de-France and
+possible exit strategies*, medRxiv 2020.04.13.20063933.
