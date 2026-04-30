@@ -185,11 +185,11 @@ plt.tight_layout(); plt.show()
 
 ## Diskussion
 
-**Was die Simulation zeigt:**
+### Was die Simulation zeigt
 
 - **Frühe Nowcasts (Tag 20–30):** Die jüngsten Tage sind stark unterberichtet.
   Der Nowcast-Algorithmus korrigiert zwar, aber mit großer Unsicherheit, da
-  wenige Meldungen sind bisher eingetroffen, um den kumulativen Delay-Anteil
+  wenige Meldungen bisher eingetroffen sind, um den kumulativen Delay-Anteil
   stabil zu schätzen. R(t)-Schätzungen sind entsprechend volatil.
 - **Späte Nowcasts (Tag 40–59):** Fast alle Fälle sind gemeldet. Nowcast und
   wahre Inzidenz konvergieren. R(t) zeigt klar den Übergang von R > 1 auf
@@ -197,7 +197,7 @@ plt.tight_layout(); plt.show()
 - **Rohzahlen (rechtes Panel):** Ohne Nowcasting sieht man einen scheinbaren
   Einbruch an den letzten Tagen: klassische Reporting-Delay-Verzerrung.
 
-**Übertragung auf Bayern (Günther et al. 2020):**
+### Übertragung auf Bayern (Günther et al. 2020)
 
 Günther et al. berichten R(t) zeitaufgelöst:
 - März 2020 (vor Maßnahmen): R(t) > 3
@@ -205,20 +205,23 @@ Günther et al. berichten R(t) zeitaufgelöst:
 - nach Kontaktbeschränkungen (~21.3.): R(t) < 1 ab Ende März
 - April 2020: R(t) stabil um 0.7–0.8
 
-Frühe Vorhersagen (mit weniger Daten) waren deutlich unsicherer; spätere
+Frühe Schätzungen (mit weniger Daten) waren deutlich unsicherer; spätere
 Schätzungen mit konsolidierten Daten zeigten denselben qualitativen Verlauf,
 aber engere Konfidenzbänder, genau wie in unserer Illustration.
 
-**Stärken des Ansatzes:**
-- Liefert ehrliche, zeitnah aktualisierte R(t)-Schätzungen mit Unsicherheitsintervallen.
+### Stärken des Ansatzes
+
+- Liefert zeitnah aktualisierte R(t)-Schätzungen mit Unsicherheitsintervallen.
 - Modulare GAM-Struktur erlaubt Erweiterungen (Wochentagseffekte, regionale Strata).
 
-**Schwächen / Limitierungen:**
+### Limitierungen
+
 - Hängt stark von Annahmen über das Generationsintervall ab ($\mu \approx 4{-}5$ d).
 - Reporting-Delay-Verteilung kann sich strukturell ändern (Feiertage, Testkapazität).
-- Erkrankungsbeginn ist nicht immer bekannt → Imputation nötig.
+- Erkrankungsbeginn ist nicht immer bekannt, Imputation nötig.
 
-**Vergleich zu mechanistischen Modellen (Tasks 5/6):**
+### Vergleich zu mechanistischen Modellen (Tasks 5/6)
+
 SIR/SECIR/Colizza simulieren _prospektiv_ unter Annahmen über $\beta(t)$;
 Nowcasting schätzt R(t) _retrospektiv_ aus Daten ohne Kompartimentstruktur.
 Die zwei Ansätze ergänzen sich: Nowcasting kalibriert die Realität, Modelle

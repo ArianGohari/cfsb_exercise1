@@ -237,7 +237,7 @@ plt.tight_layout(); plt.show()
 
 # 5. Diskussion
 
-**Strukturelle Unterschiede:**
+### Strukturelle Unterschiede
 
 | | Neher | Colizza |
 |---|---|---|
@@ -247,7 +247,7 @@ plt.tight_layout(); plt.show()
 | Mortalität | nur in ICU | in H und ICU |
 | Originalversion | deterministisch, alters­stratifiziert | stochastisch, alters­stratifiziert |
 
-**Beobachtungen unserer Simulationen:**
+### Beobachtungen
 
 - Beide Modelle reproduzieren die typische SIR-artige Welle bei $R_0 = 3$.
 - Colizza trennt die Übertragungswege feiner, z.B. ist die **direkte Mortalität in H**
@@ -257,7 +257,8 @@ plt.tight_layout(); plt.show()
 - Lockdown wirkt in beiden Modellen ähnlich (Peak verschiebt sich, fällt ab),
   Lockerung führt zur zweiten Welle.
 
-**Limitierungen:**
+### Limitierungen
+
 - Keine Altersstruktur: gerade Colizza lebt von altersspezifischen Kontaktmatrizen
   (Schule/Arbeit/Haushalt), und der ganze Effekt von "Schulen schließen,
   Senioren isolieren" lässt sich ohne Altersgruppen nicht abbilden.
@@ -266,7 +267,8 @@ plt.tight_layout(); plt.show()
   Next-Generation-Approximation.
 - Erwachsenen-Werte für alle Übergangsraten (Senioren-Mortalität ist deutlich höher).
 
-**Konsequenzen:**
+### Konsequenzen
+
 Beide Modelle stimmen qualitativ überein: ohne Maßnahmen ICU-Kollaps,
 mit Lockdown Peak unter Kapazität drückbar, aber Aufhebung führt zu
 zweiter Welle. Die Hauptaussage des Colizza-Papers, dass Exit-Strategien

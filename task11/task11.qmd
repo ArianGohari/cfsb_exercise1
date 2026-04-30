@@ -305,7 +305,7 @@ print("Drugs mit mehreren Targets:\n", multi[multi > 1])
 
 ## 3. Analyse und Diskussion
 
-**Aus dem Gordon-Netzwerk:**
+### Gordon-Netzwerk
 
 - **Orf8** ist der virale Hub mit den meisten humanen Interaktoren (~20):
   viele MHC-I-Moleküle (HLA-A/B/C/E/F) und ER-Qualitätskontroll-Proteine.
@@ -319,7 +319,7 @@ print("Drugs mit mehreren Targets:\n", multi[multi > 1])
 - **Humane Multi-Bait-Hubs** (z.B. SIGMAR1, PABPC1, VPS39) binden mehrere
   virale Proteine gleichzeitig, also höchstpriorisierte Drug-Targets.
 
-**Aus dem CORDITE-Netzwerk:**
+### CORDITE-Netzwerk
 
 - **Mpro** hat die meisten Inhibitoren (17) ->  intensivste Forschung,
   da die Protease essentiell und humanspezifisch ist.
@@ -329,7 +329,7 @@ print("Drugs mit mehreren Targets:\n", multi[multi > 1])
 - **Spike/TMPRSS2**: Camostat und Nafamostat blockieren den Eintritt direkt
   über TMPRSS2-Hemmung: unabhängig vom viralen Proteom.
 
-**Verknüpfung beider Netzwerke:**
+### Verknüpfung beider Netzwerke
 
 Die SIGMAR1-Knoten erscheinen in beiden: Gordon et al. zeigen die
 virale Bindung (Nsp6, Orf7b), CORDITE liefert die Drug-Kandidaten

@@ -402,8 +402,10 @@ Grundlage des *"flatten the curve"*-Arguments im deutschen Kontext.
   Szenarien wird die ICU-Kapazität ohne Maßnahmen massiv überschritten,
   das ist die epidemiologische Grundlage der deutschen Eindämmungspolitik.
 
-**Limitierungen:** keine Altersstruktur, keine räumliche Heterogenität, keine
-stochastischen Effekte, keine echten Daten gefittet. Die echten Modelle
+### Limitierungen
+
+Keine Altersstruktur, keine räumliche Heterogenität, keine stochastischen
+Effekte, keine Kalibrierung an echte Daten. Die publizierten Modelle
 (Neher, Khailaie et al.) sind altersstratifiziert mit Kontaktmatrizen.
 
 **Quellen:**

@@ -1,6 +1,6 @@
 # Task 2 – Bioinformatische und systemsbiologische Fragestellungen zu COVID-19
 
-Der Wikipedia-Artikel zu COVID-19 zeigt, dass SARS-CoV-2 über das Spike-Protein an den menschlichen ACE2-Rezeptor bindet. Daraus ergeben sich zwei zentrale Richtungen:
+SARS-CoV-2 bindet über das Spike-Protein an den humanen ACE2-Rezeptor. Zwei bioinformatische Fragestellungen folgen daraus unmittelbar:
 
 ## Impfstoffentwicklung
 
@@ -10,6 +10,6 @@ Welche Epitope im Receptor-Binding Domain (RBD) des Spike-Proteins sind konservi
 
 Welche humanen Wirtsproteinen interagiert SARS-CoV-2, und welche dieser Proteine sind bereits bekannte Wirkstoffziele? Aus systemsbiologischer Sicht lässt sich ein Virus-Wirt-Interaktionsnetzwerk rekonstruieren, um potenzielle Drug-Repurposing-Kandidaten zu identifizieren.
 
-## Besonderes Interesse
+## Offene Frage
 
-Besonders interessant erscheint die Frage, wie Mutationen im Spike-Protein die Bindungsaffinität zu ACE2 verändern, relevant sowohl für die Übertragbarkeit als auch für die Effektivität möglicher Impfstoffe.
+Wie verändern Mutationen im Spike-Protein die Bindungsaffinität zu ACE2? Das ist sowohl für die Übertragbarkeit als auch für die Impfstoffwirksamkeit relevant.
