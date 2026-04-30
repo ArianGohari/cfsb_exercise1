@@ -1,0 +1,18 @@
+---
+title: "Bisect"
+format: html
+---
+
+# Übersicht
+
+**Repo:** <https://github.com/ArianGohari/test>
+
+{{< include task1/report.qmd >}}
+{{< include task2/task2.md >}}
+{{< include task3/task3.qmd >}}
+{{< include task4/task4.qmd >}}
+{{< include task5/task5.qmd >}}
+{{< include task6/task6.qmd >}}
+{{< include task7/task7.md >}}
+{{< include task8/task8.md >}}
+{{< include task9/task9.md >}}

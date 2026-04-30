@@ -1,4 +1,4 @@
-# Computational (Food) and Systems Biology: Exercise 1
+# Computational (Food) Systems Biology: Exercise 1
 
 ## Voraussetzungen
 
