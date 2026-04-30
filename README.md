@@ -1,4 +1,4 @@
-# Computational Foundations in Systems Biology – Übungsblatt 1
+# Computational (Food) and Systems Biology – Übungsblatt 1
 
 ## Voraussetzungen
 
